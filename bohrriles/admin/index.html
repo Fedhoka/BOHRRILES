@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOHRriles</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* ── Paleta BOHR oficial ─────────────────────────── */
+  --orange:     #FF671B;
+  --orange2:    #E55510;
+  --orange3:    #FF8444;
+  --orange-bg:  #FFF0EB;
+  --orange-bg2: #FFE0D0;
+
+  /* ── Superficies — opción 1 BLANCO LIMPIO ─────────── */
+  --bg:      #FAF8F6;   /* página: gris muy cálido */
+  --bg2:     #FFFFFF;   /* cards y sidebar: blanco */
+  --bg3:     #F5F2EE;   /* hover filas, inputs */
+  --bg4:     #EDE9E4;   /* progress tracks */
+  --border:  #EAE6E0;   /* bordes suaves */
+  --border2: #D8D2CA;   /* bordes énfasis */
+
+  /* ── Texto ────────────────────────────────────────── */
+  --text:    #1A1612;   /* casi negro cálido */
+  --text2:   #7A7068;   /* secundario */
+  --text3:   #ADA49A;   /* muted */
+
+  /* ── Status ───────────────────────────────────────── */
+  --green:    #1A7A45;
+  --green-t:  rgba(26,122,69,.1);
+  --amber:    #AA7700;
+  --amber-t:  rgba(170,119,0,.1);
+  --blue:     #1A5A9A;
+  --blue-t:   rgba(26,90,154,.1);
+  --gray-t:   rgba(160,148,136,.15);
+  --mint:     #A0D9B3;
+  --teal:     #005C5D;
+  --yellow:   #FFB700;
+
+  --sidebar: 240px;
+  --r: 8px;
+}
+
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--orange)}
+
+/* ── LOGIN ─────────────────────────────────────────────── */
+#login-screen{
+  position:fixed;inset:0;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  z-index:999;
+}
+.login-wrap{
+  width:360px;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:40px 36px;
+}
+.login-brand{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:0;
+  display:flex;align-items:center;gap:0;
+  margin-bottom:4px;
+}
+.brand-box{
+  background:var(--orange);
+  color:#fff;
+  font-size:32px;
+  padding:4px 8px 2px;
+  border-radius:5px;
+  line-height:1;
+}
+.brand-rest{
+  color:var(--text);
+  font-size:32px;
+  padding-left:4px;
+}
+.login-sub{font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:36px}
+
+label.lbl{display:block;font-size:11px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.inp{
+  width:100%;background:var(--bg3);
+  border:1px solid var(--border);border-radius:var(--r);
+  padding:11px 14px;color:var(--text);font-size:14px;
+  font-family:'Inter',sans-serif;margin-bottom:14px;
+  transition:border-color .15s;
+}
+.inp:focus{outline:none;border-color:var(--orange)}
+.inp::placeholder{color:var(--text3)}
+
+select.inp option{background:var(--bg3)}
+
+.btn-full{
+  width:100%;background:var(--orange);color:#fff;
+  border:none;border-radius:var(--r);padding:12px;
+  font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:background .15s;margin-top:4px;
+}
+.btn-full:hover{background:var(--orange2)}
+#login-err{color:#E06070;font-size:12px;margin-bottom:10px;display:none}
+
+/* ── SIDEBAR ────────────────────────────────────────────── */
+.sidebar{
+  width:var(--sidebar);min-width:var(--sidebar);
+  background:#fff;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;overflow-y:auto;
+}
+.sb-logo{
+  padding:22px 18px 16px;border-bottom:1px solid var(--border);
+}
+.sb-logo .brand-box{font-size:20px;padding:2px 6px 1px}
+.sb-logo .brand-rest{font-size:20px}
+.sb-logo .brand-app{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:11px;
+  color:var(--text3);letter-spacing:3px;text-transform:uppercase;
+  display:block;margin-top:4px;
+}
+.sb-role{
+  margin:0 10px 0;padding:8px 10px;
+  background:var(--red-bg);border:1px solid var(--red-bg2);
+  border-radius:6px;font-size:11px;color:var(--red3);
+  font-weight:600;letter-spacing:.5px;
+}
+.sb-section{
+  padding:16px 14px 4px;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);
+}
+.nav{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 14px;margin:1px 8px;border-radius:6px;
+  cursor:pointer;font-size:13px;color:var(--text2);
+  transition:all .12s;user-select:none;
+}
+.nav:hover{background:var(--bg3);color:var(--text)}
+.nav.on{background:var(--red);color:#fff;font-weight:500}
+.nav-ic{font-size:14px;width:16px;text-align:center}
+
+.sb-foot{
+  margin-top:auto;padding:14px 16px;
+  border-top:1px solid var(--border);
+  font-size:12px;color:var(--text3);
+}
+.sb-foot strong{display:block;color:var(--text);margin-bottom:2px}
+.logout{display:inline-block;margin-top:8px;color:var(--text3);cursor:pointer;font-size:11px;transition:color .15s}
+.logout:hover{color:var(--red3)}
+
+/* ── MAIN ───────────────────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:14px 26px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.topbar-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:22px;color:var(--text);letter-spacing:.3px;
+}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.chip-date{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text3);font-size:11px;padding:4px 11px;border-radius:20px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 16px;border-radius:var(--r);font-size:12px;
+  font-weight:600;cursor:pointer;border:none;
+  font-family:'Inter',sans-serif;transition:all .12s;
+}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:var(--orange2)}
+.btn-orange:active{transform:scale(.97)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange2)}
+.btn-sm{padding:5px 11px;font-size:11px;border-radius:6px}
+
+.content{padding:24px;flex:1;overflow-y:auto}
+
+/* ── PANELS ─────────────────────────────────────────────── */
+.panel{display:none}
+.panel.on{display:block}
+
+/* ── STAT CARDS ─────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.stat:hover{border-color:var(--orange)}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--orange))}
+.stat-lbl{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.stat-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:38px;color:var(--text);line-height:1;
+}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.stat-trend{
+  position:absolute;right:14px;top:14px;
+  font-size:11px;font-weight:600;
+  padding:2px 7px;border-radius:20px;
+}
+.trend-up{background:rgba(26,122,69,.12);color:#1A7A45}
+.trend-dn{background:rgba(200,50,30,.1);color:#C03020}
+.trend-eq{background:var(--gray-t);color:var(--text3)}
+
+/* ── CARDS ──────────────────────────────────────────────── */
+.card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:18px;
+}
+.card-head{
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:15px;color:var(--text);
+}
+
+/* ── TABLE ──────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse}
+th{
+  background:var(--bg3);padding:9px 16px;text-align:left;
+  font-size:9px;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:11px 16px;font-size:13px;
+  border-bottom:1px solid var(--border);color:var(--text);
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+
+/* ── FILTERS ────────────────────────────────────────────── */
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.search{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--r);padding:8px 13px;
+  color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:240px;
+}
+.search:focus{outline:none;border-color:var(--orange)}
+.search::placeholder{color:var(--text3)}
+select.fsel{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--r);padding:8px 13px;
+  color:var(--text);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;
+}
+select.fsel:focus{outline:none;border-color:var(--orange)}
+
+/* ── CHIPS ──────────────────────────────────────────────── */
+.ch{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.ch-r{background:rgba(200,50,30,.1);color:#A02010}
+.ch-g{background:rgba(26,122,69,.12);color:#1A7A45}
+.ch-a{background:rgba(255,103,27,.12);color:#CC5211}
+.ch-b{background:rgba(0,92,93,.1);color:#005C5D}
+.ch-x{background:var(--bg3);color:var(--text3)}
+
+.days{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.d-ok{background:rgba(26,122,69,.12);color:#1A7A45}
+.d-warn{background:rgba(255,183,0,.12);color:#996600}
+.d-over{background:rgba(200,50,30,.12);color:#CC3010}
+
+/* ── MINI BAR CHART ─────────────────────────────────────── */
+.bars{display:flex;align-items:flex-end;gap:6px;height:80px}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.b{width:100%;background:var(--orange);border-radius:3px 3px 0 0;min-height:3px;opacity:.85;cursor:pointer;transition:opacity .15s}
+.b:hover{opacity:1}
+.bl{font-size:9px;color:var(--text3)}
+.bv{font-size:9px;color:var(--text2);font-weight:600}
+
+/* ── TREND CHART (sparkline) ────────────────────────────── */
+.spark{display:flex;align-items:flex-end;gap:3px;height:36px}
+.sp{flex:1;border-radius:2px 2px 0 0;min-height:2px;opacity:.8}
+
+/* ── TWO / THREE COL ─────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* ── PROGRESS ────────────────────────────────────────────── */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.prog-track{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--orange);border-radius:3px}
+
+/* ── MODAL ───────────────────────────────────────────────── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.overlay.on{display:flex}
+.modal{
+  background:#fff;border:1px solid var(--border);
+  border-radius:14px;padding:32px;width:460px;max-width:95vw;position:relative;
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+}
+.modal h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:22px;color:var(--text);margin-bottom:20px;
+}
+.mc{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer}
+.mc:hover{color:var(--text)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fgrp{margin-bottom:13px}
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--green);color:#fff;
+  padding:11px 18px;border-radius:var(--r);font-size:13px;font-weight:500;
+  transform:translateY(70px);opacity:0;transition:all .3s;z-index:300;
+}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.err{background:#CC3010}
+
+/* ── PLANTA PANEL (rol produccion) ──────────────────────── */
+.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:540px}
+.action-card{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:28px 24px;cursor:pointer;transition:all .15s;text-align:center;
+}
+.action-card:hover{border-color:var(--orange);background:var(--orange-bg)}
+.action-card:active{transform:scale(.97)}
+.ac-icon{font-size:40px;margin-bottom:12px}
+.ac-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px;
+}
+.ac-desc{font-size:12px;color:var(--text3)}
+
+/* ── SCAN INDICATOR ─────────────────────────────────────── */
+.scan-box{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:40px;text-align:center;max-width:380px;margin:0 auto;
+}
+.scan-icon{font-size:64px;margin-bottom:16px;opacity:.7}
+.scan-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:24px;color:var(--text);margin-bottom:8px;
+}
+.scan-hint{font-size:13px;color:var(--text3);margin-bottom:24px}
+
+/* ── CAP BUTTONS ─────────────────────────────────────────── */
+.cap-btn{flex:1;padding:8px 4px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'Inter',sans-serif;transition:all .12s}
+.cap-btn:hover{border-color:var(--orange3);color:var(--orange3)}
+.cap-btn.on{background:var(--orange);border-color:var(--orange);color:#fff}
+
+/* ── REPORT ──────────────────────────────────────────────── */
+.report-modal{width:600px;max-height:85vh;overflow-y:auto}
+.rep-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--orange)}
+.rep-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px}
+.rep-brand .o{color:var(--orange)}
+.rep-meta{font-size:11px;color:var(--text3);text-align:right;line-height:1.8}
+.rep-clibox{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+.rep-cliname{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--text);margin-bottom:3px}
+.rep-clisub{font-size:12px;color:var(--text3)}
+.rep-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.rep-sc{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
+.rep-sv{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:var(--orange)}
+.rep-sl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.rep-table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px}
+.rep-table th{background:var(--orange);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.5px}
+.rep-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.rep-table tr:last-child td{border-bottom:none}
+.rep-table tr:nth-child(even) td{background:rgba(255,103,27,.04)}
+.rep-footer{padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.8}
+.rep-note{background:var(--orange-bg);border:1px solid var(--orange-bg2);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--orange2);margin-bottom:14px}
+
+/* Monthly chart inside report */
+.rep-chart-wrap{margin-bottom:18px}
+.rep-chart-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.rep-chart-title span{font-size:10px;color:var(--text3);font-weight:400}
+.rep-bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:6px}
+.rep-bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.rep-b{width:100%;border-radius:3px 3px 0 0;min-height:3px;cursor:default}
+.rep-bv{font-size:10px;font-weight:700}
+.rep-bl{font-size:9px;color:var(--text3)}
+.rep-trend-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:6px;margin-bottom:14px}
+.rep-trend-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px}
+.rep-trend-info{flex:1}
+.rep-trend-lbl{font-size:11px;color:var(--text3)}
+.rep-trend-delta{font-size:12px;font-weight:600;margin-top:2px}
+.rep-estilo-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rep-estilo-bar{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.rep-estilo-fill{height:100%;border-radius:3px}
+@media print{
+  body{background:#fff!important;color:#000!important}
+  .overlay{position:relative!important;background:none!important}
+  .modal{border:none;box-shadow:none;max-height:none}
+  .mc,.btn-ghost,.btn-orange,.topbar,.sidebar,.content{display:none!important}
+  .rep-table th{background:#FF671B!important;-webkit-print-color-adjust:exact}
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:900px){
+  .stats{grid-template-columns:1fr 1fr}
+  .g2,.g3{grid-template-columns:1fr}
+  :root{--sidebar:200px}
+}
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  LOGIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <span class="brand-box">BOHR</span>
+      <span class="brand-rest">riles</span>
+    </div>
+    <div class="login-sub">Sistema de gestión</div>
+    <div id="login-err">Usuario o contraseña incorrectos.</div>
+    <label class="lbl">Usuario</label>
+    <input class="inp" id="lu" type="text" placeholder="usuario" autocomplete="username">
+    <label class="lbl">Contraseña</label>
+    <input class="inp" id="lp" type="password" placeholder="••••••••" autocomplete="current-password">
+    <button class="btn-full" onclick="doLogin()">Ingresar</button>
+    <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)">
+      Demo: <strong style="color:var(--text2)">admin / admin</strong> o <strong style="color:var(--text2)">planta / planta</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SIDEBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="login-brand" style="margin-bottom:6px">
+      <span class="brand-box">BOHR</span>
+      <span class="brand-rest">riles</span>
+    </div>
+    <span class="brand-app">Panel de gestión</span>
+  </div>
+
+  <!-- Rol badge -->
+  <div style="padding:10px 10px 2px">
+    <div class="sb-role" id="sb-role">Admin</div>
+  </div>
+
+  <!-- NAV ADMIN -->
+  <div id="nav-admin">
+    <div class="sb-section">Principal</div>
+    <div class="nav on" onclick="go('dashboard',this)"><span class="nav-ic">▣</span>Dashboard</div>
+    <div class="nav" onclick="go('barriles',this)"><span class="nav-ic">◎</span>Barriles</div>
+    <div class="nav" onclick="go('clientes',this)"><span class="nav-ic">◈</span>Clientes</div>
+
+    <div class="sb-section">Operaciones</div>
+    <div class="nav" onclick="go('entregas',this)"><span class="nav-ic">▷</span>Entregas</div>
+    <div class="nav" onclick="go('pedidos',this)"><span class="nav-ic">◻</span>Pedidos</div>
+    <div class="nav" onclick="go('cuentas',this)"><span class="nav-ic">$</span>Cuentas corrientes</div>
+
+    <div class="sb-section">Análisis</div>
+    <div class="nav" onclick="go('estadisticas',this)"><span class="nav-ic">↗</span>Estadísticas</div>
+
+    <div class="sb-section">Config</div>
+    <div class="nav" onclick="go('usuarios',this)"><span class="nav-ic">◇</span>Usuarios</div>
+    <div class="nav" onclick="go('estilos',this)"><span class="nav-ic">⬡</span>Estilos</div>
+    <div class="nav" onclick="go('migracion',this)"><span class="nav-ic">⇄</span>Migración datos</div>
+  </div>
+
+  <!-- NAV PLANTA -->
+  <div id="nav-planta" style="display:none">
+    <div class="sb-section">Operaciones</div>
+    <div class="nav on" onclick="go('planta',this)"><span class="nav-ic">▣</span>Acciones</div>
+  </div>
+
+  <div class="sb-foot">
+    <strong id="sb-user">—</strong>
+    <span id="sb-rol-txt">—</span>
+    <div class="logout" onclick="doLogout()">⎋ Cerrar sesión</div>
+  </div>
+</nav>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MAIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="pg-title">Dashboard</div>
+    <div class="topbar-r">
+      <div class="chip-date" id="hoy-chip"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ──────────────────────────────── -->
+    <div class="panel on" id="panel-dashboard">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-lbl">En planta</div>
+          <div class="stat-val" id="s1">—</div>
+          <div class="stat-sub">disponibles</div>
+          <span class="stat-trend" id="tr1"></span>
+        </div>
+        <div class="stat" style="--ac:var(--green)">
+          <div class="stat-lbl">Envasados</div>
+          <div class="stat-val" id="s2">—</div>
+          <div class="stat-sub">listos para salir</div>
+          <span class="stat-trend" id="tr2"></span>
+        </div>
+        <div class="stat" style="--ac:var(--blue)">
+          <div class="stat-lbl">En clientes</div>
+          <div class="stat-val" id="s3">—</div>
+          <div class="stat-sub">fuera de planta</div>
+          <span class="stat-trend" id="tr3"></span>
+        </div>
+        <div class="stat" style="--ac:var(--amber)">
+          <div class="stat-lbl">Vencen esta semana</div>
+          <div class="stat-val" id="s4" style="color:#C89040">—</div>
+          <div class="stat-sub">requieren atención</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Barriles en clientes — días</span></div>
+          <table>
+            <thead><tr><th>Barril</th><th>Cliente</th><th>Estilo</th><th>Días</th></tr></thead>
+            <tbody id="t-activos"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Últimos movimientos</span></div>
+          <table>
+            <thead><tr><th>Hora</th><th>Acción</th><th>Barril</th><th>Operario</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--text3)">10:32</td><td><span class="ch ch-g">Envasado</span></td><td>30L #06</td><td>Juan P.</td></tr>
+            <tr><td style="color:var(--text3)">09:15</td><td><span class="ch ch-b">Entrega</span></td><td>30L #01</td><td>María L.</td></tr>
+            <tr><td style="color:var(--text3)">Ayer</td><td><span class="ch ch-x">Devolución</span></td><td>20L #01</td><td>Juan P.</td></tr>
+            <tr><td style="color:var(--text3)">Ayer</td><td><span class="ch ch-a">Vaciado</span></td><td>20L #02</td><td>Juan P.</td></tr>
+          </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Producción mensual — barriles envasados</span>
+          <span style="font-size:11px;color:var(--text3)">últimos 6 meses</span>
+        </div>
+        <div style="padding:18px 22px">
+          <div class="bars" id="chart-prod"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BARRILES ───────────────────────────────── -->
+    <div class="panel" id="panel-barriles">
+      <div class="filters">
+        <input class="search" type="text" placeholder="Buscar barril o código..." oninput="fil('barriles',this.value)">
+        <select class="fsel" onchange="filEstado(this.value)">
+          <option value="">Todos</option>
+          <option>disponible</option><option>envasado</option>
+          <option>entregado</option><option>vacio</option>
+        </select>
+        <button class="btn btn-orange" onclick="openM('m-barril')">+ Nuevo</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Código</th><th>Nombre</th><th>Estado</th><th>Estilo actual</th><th>Envasado</th><th>Vence</th><th></th></tr></thead>
+          <tbody id="t-barriles"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CLIENTES ───────────────────────────────── -->
+    <div class="panel" id="panel-clientes">
+      <div class="filters">
+        <input class="search" type="text" placeholder="Buscar cliente..." oninput="fil('clientes',this.value)">
+        <button class="btn btn-orange" onclick="openM('m-cliente')">+ Nuevo</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Cliente</th><th>Razón social</th><th>Teléfono</th><th>Barriles activos</th><th>Días (máx)</th><th>Saldo</th><th></th></tr></thead>
+          <tbody id="t-clientes"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ENTREGAS ───────────────────────────────── -->
+    <div class="panel" id="panel-entregas">
+      <div class="filters">
+        <input class="search" type="text" placeholder="Buscar..." oninput="fil('entregas',this.value)">
+        <select class="fsel" onchange="filEntregas(this.value)">
+          <option value="">Todas</option>
+          <option value="entregado">En cliente</option>
+          <option value="devuelto">Devueltas</option>
+        </select>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Fecha</th><th>Barril</th><th>Estilo</th><th>Cliente</th><th>Días</th><th>Estado</th></tr></thead>
+          <tbody id="t-entregas"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── PEDIDOS ────────────────────────────────── -->
+    <div class="panel" id="panel-pedidos">
+      <div class="filters">
+        <input class="search" type="text" placeholder="Buscar pedido...">
+        <select class="fsel"><option>Todos</option><option>pendiente</option><option>preparando</option><option>entregado</option></select>
+        <button class="btn btn-orange" onclick="toast('Módulo de pedidos completo — próximamente','info')">+ Nuevo pedido</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Nº</th><th>Fecha</th><th>Cliente</th><th>Items</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="t-pedidos"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CUENTAS ────────────────────────────────── -->
+    <div class="panel" id="panel-cuentas">
+      <div class="filters">
+        <input class="search" type="text" placeholder="Buscar cliente...">
+        <button class="btn btn-orange" onclick="toast('Registrar pago — próximamente','info')">+ Pago</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Cliente</th><th>Barriles activos</th><th>Últ. movimiento</th><th>Saldo</th><th></th></tr></thead>
+          <tbody id="t-cuentas"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ESTADÍSTICAS ───────────────────────────── -->
+    <div class="panel" id="panel-estadisticas">
+
+      <!-- Resumen global -->
+      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat" style="--ac:var(--orange)">
+          <div class="stat-lbl">Rotación promedio</div>
+          <div class="stat-val">18<span style="font-size:18px;font-weight:600">d</span></div>
+          <div class="stat-sub">días por barril en cliente</div>
+          <div class="trend t-up">▲ 2d mejor que el mes ant.</div>
+        </div>
+        <div class="stat" style="--ac:var(--mint)">
+          <div class="stat-lbl">Envasados este mes</div>
+          <div class="stat-val">9</div>
+          <div class="stat-sub">barriles producidos</div>
+          <div class="trend t-dn">▼ 18% vs mes anterior</div>
+        </div>
+        <div class="stat" style="--ac:var(--teal)">
+          <div class="stat-lbl">Clientes activos</div>
+          <div class="stat-val">4</div>
+          <div class="stat-sub">con barriles en su poder</div>
+          <div class="trend t-eq">= sin cambio</div>
+        </div>
+      </div>
+
+      <!-- Estadísticas por cliente -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-head">
+          <span class="card-title">Consumo mensual por cliente</span>
+          <select class="fsel" id="sel-cliente-est" onchange="renderEstCliente(this.value)" style="font-size:12px">
+            <option value="">— Seleccioná un cliente —</option>
+          </select>
+        </div>
+        <div id="est-cliente-wrap" style="padding:20px">
+          <div style="text-align:center;color:var(--text3);padding:28px;font-size:13px">
+            Seleccioná un cliente para ver su historial de consumo mensual
+          </div>
+        </div>
+      </div>
+
+      <div class="g2">
+
+        <!-- Consumo por estilo -->
+        <div class="card" style="padding:20px">
+          <div class="card-title" style="margin-bottom:16px">Consumo por estilo — global</div>
+          <div id="est-estilos"></div>
+        </div>
+
+        <!-- Top clientes por rotación -->
+        <div class="card" style="padding:20px">
+          <div class="card-title" style="margin-bottom:16px">Clientes — barriles histórico</div>
+          <div id="est-clientes"></div>
+        </div>
+
+        <!-- Tendencia mensual por cliente -->
+        <div class="card">
+          <div class="card-head">
+            <span class="card-title">Tendencia mensual — todos los clientes</span>
+          </div>
+          <table>
+            <thead><tr><th>Cliente</th><th>Ene</th><th>Feb</th><th>Mar</th><th>Tendencia</th><th>Δ %</th></tr></thead>
+            <tbody id="t-tendencias"></tbody>
+          </table>
+        </div>
+
+        <!-- Vencimientos -->
+        <div class="card">
+          <div class="card-head"><span class="card-title">Vencimientos próximos</span></div>
+          <table>
+            <thead><tr><th>Cliente</th><th>Barril</th><th>Estilo</th><th>Vence</th><th>Días</th></tr></thead>
+            <tbody id="t-venc"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Rotación por barril -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Rotación por barril — días promedio en cliente</span>
+        </div>
+        <div style="padding:16px 22px">
+          <div class="bars" id="chart-rotacion"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel" id="panel-usuarios">
+      <div style="margin-bottom:16px;padding:14px 18px;background:var(--red-bg);border:1px solid var(--red-bg2);border-radius:var(--r);font-size:13px">
+        <strong style="color:var(--red3)">Roles disponibles:</strong>
+        <span style="color:var(--text2)"> <strong>admin</strong> → acceso completo (dashboard, estadísticas, clientes, usuarios, etc.) |
+        <strong>planta</strong> → solo envasar, recibir y entregar barriles via QR</span>
+      </div>
+      <div class="filters">
+        <button class="btn btn-orange" onclick="openM('m-usuario')">+ Nuevo usuario</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Nombre</th><th>Login</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th></th></tr></thead>
+          <tbody id="t-usuarios"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ESTILOS ─────────────────────────────────── -->
+    <div class="panel" id="panel-estilos">
+      <div class="filters">
+        <button class="btn btn-orange" onclick="openM('m-estilo')">+ Nuevo estilo</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Nombre</th><th>Descripción</th><th>Barriles activos</th><th>Envasados total</th><th></th></tr></thead>
+          <tbody id="t-estilos"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── MIGRACIÓN ──────────────────────────────── -->
+    <div class="panel" id="panel-migracion">
+      <div class="g2">
+        <div class="card" style="padding:24px">
+          <div class="card-title" style="margin-bottom:6px">📥 Importar desde Excel/CSV</div>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.6">
+            Subí los archivos exportados desde whimk.com. El sistema los importa a la base de datos automáticamente.
+          </p>
+          <div style="margin-bottom:12px">
+            <label class="lbl">Barriles (CSV/Excel)</label>
+            <input type="file" class="inp" accept=".csv,.xlsx,.xls" id="f-barriles">
+          </div>
+          <div style="margin-bottom:12px">
+            <label class="lbl">Clientes (CSV/Excel)</label>
+            <input type="file" class="inp" accept=".csv,.xlsx,.xls" id="f-clientes">
+          </div>
+          <div style="margin-bottom:12px">
+            <label class="lbl">Entregas activas (CSV/Excel)</label>
+            <input type="file" class="inp" accept=".csv,.xlsx,.xls" id="f-entregas">
+          </div>
+          <div style="margin-bottom:12px">
+            <label class="lbl">Estilos de cerveza (CSV/Excel)</label>
+            <input type="file" class="inp" accept=".csv,.xlsx,.xls" id="f-estilos">
+          </div>
+          <button class="btn btn-orange" style="width:100%;justify-content:center;padding:12px;font-size:14px" onclick="toast('Subí los CSV y esta función procesará la migración cuando el backend esté conectado','info')">
+            Procesar importación
+          </button>
+        </div>
+
+        <div>
+          <div class="card" style="padding:24px;margin-bottom:14px">
+            <div class="card-title" style="margin-bottom:12px">🖥 Cómo probar localmente (GRATIS)</div>
+            <ol style="font-size:13px;color:var(--text2);line-height:2;padding-left:20px">
+              <li>Descargá e instalá <strong style="color:var(--text)">XAMPP</strong> (gratuito)</li>
+              <li>Copiá la carpeta <code style="color:var(--red3);background:var(--red-bg);padding:1px 5px;border-radius:3px">backend/</code> a <code style="color:var(--red3);background:var(--red-bg);padding:1px 5px;border-radius:3px">htdocs/bohrriles/</code></li>
+              <li>Abrí phpMyAdmin → importá <code style="color:var(--red3);background:var(--red-bg);padding:1px 5px;border-radius:3px">schema.sql</code></li>
+              <li>Editá <code style="color:var(--red3);background:var(--red-bg);padding:1px 5px;border-radius:3px">config.php</code> con usuario <strong style="color:var(--text)">root</strong> sin contraseña</li>
+              <li>Abrí este HTML en el navegador</li>
+              <li>Probás todo. Cuando estés conforme, subís al hosting</li>
+            </ol>
+          </div>
+          <div class="card" style="padding:24px">
+            <div class="card-title" style="margin-bottom:12px">💡 Hosting recomendado</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.8">
+              <strong style="color:var(--text)">Hostinger</strong> — ~$3 USD/mes, incluye PHP + MySQL + dominio<br>
+              No necesitás VPS. El sistema está optimizado para hosting compartido.<br><br>
+              <strong style="color:var(--text)">Antes de pagar:</strong> probalo todo con XAMPP. Cuando estés seguro, subís los archivos por cPanel y listo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL PLANTA (rol produccion) ──────────── -->
+    <div class="panel" id="panel-planta">
+      <p style="font-size:13px;color:var(--text3);margin-bottom:20px">Seleccioná la acción a realizar. Cada una activa el escáner QR del celular.</p>
+      <div class="action-grid">
+        <div class="action-card" onclick="showScan('envasar')">
+          <div class="ac-icon">📦</div>
+          <div class="ac-title">Envasar barril</div>
+          <div class="ac-desc">Escanear barril → seleccionar estilo → guardar</div>
+        </div>
+        <div class="action-card" onclick="showScan('recibir')">
+          <div class="ac-icon">📥</div>
+          <div class="ac-title">Recibir barril</div>
+          <div class="ac-desc">Escanear barril devuelto por cliente</div>
+        </div>
+        <div class="action-card" onclick="showScan('entregar')">
+          <div class="ac-icon">🚚</div>
+          <div class="ac-title">Entregar a cliente</div>
+          <div class="ac-desc">Escanear barril → seleccionar cliente</div>
+        </div>
+        <div class="action-card" onclick="showScan('vaciar')">
+          <div class="ac-icon">🪣</div>
+          <div class="ac-title">Vaciar barril</div>
+          <div class="ac-desc">Registrar barril vaciado en planta</div>
+        </div>
+      </div>
+
+      <!-- Scan result area -->
+      <div id="scan-area" style="display:none;margin-top:24px">
+        <div class="scan-box">
+          <div class="scan-icon">📷</div>
+          <div class="scan-title" id="scan-title">Escaneando...</div>
+          <div class="scan-hint" id="scan-hint">Apuntá la cámara al código de barras del barril</div>
+          <button class="btn btn-orange" style="width:100%;justify-content:center;padding:12px" onclick="simScan()">
+            Simular escaneo (demo)
+          </button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:10px;margin-top:8px" onclick="document.getElementById('scan-area').style.display='none'">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MODALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<!-- Barril -->
+<div class="overlay" id="m-barril">
+  <div class="modal">
+    <button class="mc" onclick="closeM('m-barril')">✕</button>
+    <h2>Nuevo barril</h2>
+    <div class="frow">
+      <div class="fgrp"><label class="lbl">Nombre</label><input class="inp" id="bn" placeholder="Barril 50L #08"></div>
+      <div class="fgrp"><label class="lbl">Código EAN (barras)</label><input class="inp" id="bc" placeholder="7790001008"></div>
+    </div>
+    <div class="fgrp">
+      <label class="lbl">Capacidad (litros)</label>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <button type="button" class="cap-btn on" onclick="setCap(50,this)">50 L</button>
+        <button type="button" class="cap-btn" onclick="setCap(30,this)">30 L</button>
+        <button type="button" class="cap-btn" onclick="setCap(20,this)">20 L</button>
+        <button type="button" class="cap-btn" onclick="setCap(10,this)">10 L</button>
+        <button type="button" class="cap-btn" onclick="setCap(null,this)">Otro</button>
+      </div>
+      <input class="inp" id="bk" type="number" value="50" placeholder="50" style="display:none">
+    </div>
+    <div id="bk-display" style="padding:9px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-size:14px;color:var(--text);margin-bottom:4px">
+      50 litros
+    </div>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-ghost" onclick="closeM('m-barril')">Cancelar</button>
+      <button class="btn btn-orange" onclick="gBarril()">Guardar barril</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cliente -->
+<div class="overlay" id="m-cliente">
+  <div class="modal">
+    <button class="mc" onclick="closeM('m-cliente')">✕</button>
+    <h2>Nuevo cliente</h2>
+    <div class="frow">
+      <div class="fgrp"><label class="lbl">Nombre / Local</label><input class="inp" id="cn" placeholder="Bar El Barril"></div>
+      <div class="fgrp"><label class="lbl">Razón social</label><input class="inp" id="cr" placeholder="opcional"></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label class="lbl">Teléfono</label><input class="inp" id="ct" placeholder="+54 223 000-0000"></div>
+      <div class="fgrp"><label class="lbl">Email</label><input class="inp" id="ce" type="email" placeholder="contacto@bar.com"></div>
+    </div>
+    <div class="fgrp"><label class="lbl">Dirección</label><input class="inp" id="cd" placeholder="Av. Colón 1234, Mar del Plata"></div>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-ghost" onclick="closeM('m-cliente')">Cancelar</button>
+      <button class="btn btn-orange" onclick="gCliente()">Guardar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Reporte de Cliente -->
+<div class="overlay" id="m-reporte">
+  <div class="modal report-modal">
+    <button class="mc" onclick="closeM('m-reporte')">✕</button>
+
+    <div id="rep-contenido">
+      <!-- Se genera dinámicamente -->
+    </div>
+
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-ghost" onclick="closeM('m-reporte')">Cerrar</button>
+      <button class="btn btn-ghost" onclick="copiarReporte()" id="btn-copiar">📋 Copiar texto</button>
+      <button class="btn btn-orange" onclick="window.print()">🖨 Imprimir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Usuario -->
+<div class="overlay" id="m-usuario">
+  <div class="modal">
+    <button class="mc" onclick="closeM('m-usuario')">✕</button>
+    <h2>Nuevo usuario</h2>
+    <div class="frow">
+      <div class="fgrp"><label class="lbl">Nombre</label><input class="inp" id="un"></div>
+      <div class="fgrp"><label class="lbl">Apellido</label><input class="inp" id="ua"></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label class="lbl">Login</label><input class="inp" id="ul" placeholder="usuario123"></div>
+      <div class="fgrp"><label class="lbl">Contraseña</label><input class="inp" id="up" type="password"></div>
+    </div>
+    <div class="fgrp">
+      <label class="lbl">Rol</label>
+      <select class="inp" id="ur">
+        <option value="planta">Planta — solo envasar, recibir, entregar</option>
+        <option value="admin">Admin — acceso completo</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-ghost" onclick="closeM('m-usuario')">Cancelar</button>
+      <button class="btn btn-orange" onclick="gUsuario()">Crear usuario</button>
+    </div>
+  </div>
+</div>
+
+<!-- Estilo -->
+<div class="overlay" id="m-estilo">
+  <div class="modal">
+    <button class="mc" onclick="closeM('m-estilo')">✕</button>
+    <h2>Nuevo estilo de cerveza</h2>
+    <div class="fgrp"><label class="lbl">Nombre</label><input class="inp" id="en" placeholder="ej: American IPA"></div>
+    <div class="fgrp"><label class="lbl">Descripción</label><input class="inp" id="ed" placeholder="Notas de lúpulo, cuerpo..."></div>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-ghost" onclick="closeM('m-estilo')">Cancelar</button>
+      <button class="btn btn-orange" onclick="gEstilo()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  JS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+// ── NOTA: conectar esta URL con el backend PHP ──────────
+const API_URL = 'https://tuservidor.com/bohrriles/app.php';
+// En XAMPP local sería: http://localhost/bohrriles/app.php
+
+// ── Usuarios demo (en producción vienen del backend) ────
+const USERS = {
+  admin:  { pass:'admin',  rol:'admin',  nombre:'Carlos Rodríguez' },
+  planta: { pass:'planta', rol:'planta', nombre:'Juan Pérez'        },
+};
+
+// ── Datos demo ─────────────────────────────────────────
+let D = {
+  barriles: [
+    {id:1,codigo:'7790001001',nombre:'Barril 30L #01',estado:'entregado',estilo:'IPA',env:'12/03/2026',venc:'12/04/2026'},
+    {id:2,codigo:'7790001002',nombre:'Barril 30L #02',estado:'envasado', estilo:'Stout',env:'20/03/2026',venc:'20/04/2026'},
+    {id:3,codigo:'7790001003',nombre:'Barril 20L #01',estado:'disponible',estilo:'—',env:'—',venc:'—'},
+    {id:4,codigo:'7790001004',nombre:'Barril 30L #03',estado:'entregado', estilo:'Amber Ale',env:'01/03/2026',venc:'01/04/2026'},
+    {id:5,codigo:'7790001005',nombre:'Barril 20L #02',estado:'vacio',    estilo:'—',env:'—',venc:'—'},
+    {id:6,codigo:'7790001006',nombre:'Barril 30L #04',estado:'envasado', estilo:'IPA',env:'25/03/2026',venc:'25/04/2026'},
+    {id:7,codigo:'7790001007',nombre:'Barril 30L #05',estado:'disponible',estilo:'—',env:'—',venc:'—'},
+    {id:8,codigo:'7790001008',nombre:'Barril 20L #03',estado:'entregado', estilo:'Lager',env:'05/03/2026',venc:'05/04/2026'},
+  ],
+  clientes: [
+    {id:1,nombre:'La Cervecería del Puerto',razon:'Puerto S.A.',tel:'223-444-5555',activos:2,saldo:-8500},
+    {id:2,nombre:'Bar Bohr',               razon:'Bohr SRL',   tel:'223-111-2222',activos:1,saldo:-3200},
+    {id:3,nombre:'Meyrelles',              razon:'Meyrelles S.A.',tel:'223-333-4444',activos:0,saldo:500},
+    {id:4,nombre:'Cachalote',              razon:'Cachalote SRL',tel:'223-555-6666',activos:1,saldo:-1800},
+    {id:5,nombre:'Vieja Estación',         razon:'VE S.A.',    tel:'223-777-8888',activos:0,saldo:0},
+    {id:6,nombre:'Jaque Mate',             razon:'JM SRL',     tel:'223-999-0000',activos:1,saldo:-4200},
+  ],
+  entregas: [
+    // Activas (entregado)
+    {fecha:'12/03/2026',mes:'2026-03',barril:'Barril 30L #01',estilo:'IPA',       cliente:'La Cervecería del Puerto',dias:16,estado:'entregado'},
+    {fecha:'01/03/2026',mes:'2026-03',barril:'Barril 30L #03',estilo:'Amber Ale', cliente:'Bar Bohr',                 dias:27,estado:'entregado'},
+    {fecha:'05/03/2026',mes:'2026-03',barril:'Barril 20L #03',estilo:'Lager',     cliente:'Jaque Mate',               dias:23,estado:'entregado'},
+    // Devueltas recientes
+    {fecha:'15/02/2026',mes:'2026-02',barril:'Barril 20L #01',estilo:'Stout',     cliente:'Cachalote',                dias:41,estado:'devuelto'},
+    {fecha:'10/03/2026',mes:'2026-03',barril:'Barril 30L #04',estilo:'Lager',     cliente:'Meyrelles',                dias:18,estado:'devuelto'},
+    // Histórico La Cervecería del Puerto
+    {fecha:'10/02/2026',mes:'2026-02',barril:'Barril 30L #02',estilo:'IPA',       cliente:'La Cervecería del Puerto',dias:28,estado:'devuelto'},
+    {fecha:'05/02/2026',mes:'2026-02',barril:'Barril 30L #05',estilo:'Stout',     cliente:'La Cervecería del Puerto',dias:22,estado:'devuelto'},
+    {fecha:'14/01/2026',mes:'2026-01',barril:'Barril 30L #01',estilo:'IPA',       cliente:'La Cervecería del Puerto',dias:20,estado:'devuelto'},
+    {fecha:'20/01/2026',mes:'2026-01',barril:'Barril 30L #04',estilo:'Amber Ale', cliente:'La Cervecería del Puerto',dias:18,estado:'devuelto'},
+    {fecha:'08/12/2025',mes:'2025-12',barril:'Barril 30L #02',estilo:'IPA',       cliente:'La Cervecería del Puerto',dias:25,estado:'devuelto'},
+    {fecha:'15/12/2025',mes:'2025-12',barril:'Barril 20L #01',estilo:'Stout',     cliente:'La Cervecería del Puerto',dias:19,estado:'devuelto'},
+    {fecha:'18/11/2025',mes:'2025-11',barril:'Barril 30L #03',estilo:'IPA',       cliente:'La Cervecería del Puerto',dias:22,estado:'devuelto'},
+    {fecha:'25/10/2025',mes:'2025-10',barril:'Barril 30L #01',estilo:'Amber Ale', cliente:'La Cervecería del Puerto',dias:20,estado:'devuelto'},
+    // Histórico Bar Bohr
+    {fecha:'08/02/2026',mes:'2026-02',barril:'Barril 30L #05',estilo:'IPA',       cliente:'Bar Bohr',                 dias:19,estado:'devuelto'},
+    {fecha:'12/01/2026',mes:'2026-01',barril:'Barril 20L #02',estilo:'Lager',     cliente:'Bar Bohr',                 dias:21,estado:'devuelto'},
+    {fecha:'20/12/2025',mes:'2025-12',barril:'Barril 30L #03',estilo:'IPA',       cliente:'Bar Bohr',                 dias:24,estado:'devuelto'},
+    {fecha:'10/11/2025',mes:'2025-11',barril:'Barril 30L #01',estilo:'Stout',     cliente:'Bar Bohr',                 dias:18,estado:'devuelto'},
+    {fecha:'05/10/2025',mes:'2025-10',barril:'Barril 30L #02',estilo:'IPA',       cliente:'Bar Bohr',                 dias:20,estado:'devuelto'},
+    // Histórico Cachalote
+    {fecha:'18/01/2026',mes:'2026-01',barril:'Barril 30L #04',estilo:'Stout',     cliente:'Cachalote',                dias:30,estado:'devuelto'},
+    {fecha:'05/12/2025',mes:'2025-12',barril:'Barril 20L #03',estilo:'IPA',       cliente:'Cachalote',                dias:22,estado:'devuelto'},
+    {fecha:'12/11/2025',mes:'2025-11',barril:'Barril 30L #02',estilo:'Amber Ale', cliente:'Cachalote',                dias:25,estado:'devuelto'},
+    {fecha:'08/10/2025',mes:'2025-10',barril:'Barril 30L #01',estilo:'Stout',     cliente:'Cachalote',                dias:19,estado:'devuelto'},
+    // Histórico Jaque Mate
+    {fecha:'20/02/2026',mes:'2026-02',barril:'Barril 30L #03',estilo:'IPA',       cliente:'Jaque Mate',               dias:22,estado:'devuelto'},
+    {fecha:'10/01/2026',mes:'2026-01',barril:'Barril 30L #05',estilo:'Lager',     cliente:'Jaque Mate',               dias:18,estado:'devuelto'},
+    {fecha:'15/12/2025',mes:'2025-12',barril:'Barril 30L #04',estilo:'IPA',       cliente:'Jaque Mate',               dias:20,estado:'devuelto'},
+    // Histórico Meyrelles
+    {fecha:'22/01/2026',mes:'2026-01',barril:'Barril 30L #02',estilo:'Wheat Beer',cliente:'Meyrelles',                dias:21,estado:'devuelto'},
+    {fecha:'10/12/2025',mes:'2025-12',barril:'Barril 30L #01',estilo:'IPA',       cliente:'Meyrelles',                dias:17,estado:'devuelto'},
+  ],
+  pedidos: [
+    {id:1,fecha:'25/03/2026',cliente:'La Cervecería del Puerto',items:2,estado:'pendiente'},
+    {id:2,fecha:'22/03/2026',cliente:'Bar Bohr',items:1,estado:'preparando'},
+    {id:3,fecha:'15/03/2026',cliente:'Cachalote',items:3,estado:'entregado'},
+  ],
+  estilos: [
+    {id:1,nombre:'IPA',       desc:'India Pale Ale, amarga y aromática',activos:3,total:28},
+    {id:2,nombre:'Stout',     desc:'Oscura, café y chocolate',          activos:1,total:14},
+    {id:3,nombre:'Amber Ale', desc:'Maltosa, color ámbar',             activos:1,total:10},
+    {id:4,nombre:'Lager',     desc:'Refrescante, baja fermentación',   activos:1,total:8},
+    {id:5,nombre:'Wheat Beer',desc:'Trigo, cítrica y frutal',          activos:0,total:4},
+  ],
+  usuarios: [
+    {id:1,nombre:'Carlos Rodríguez',login:'admin', rol:'admin', activo:true, ultimo:'Hoy 10:30'},
+    {id:2,nombre:'Juan Pérez',      login:'planta',rol:'planta',activo:true, ultimo:'Hoy 08:15'},
+    {id:3,nombre:'María López',     login:'maria', rol:'admin', activo:true, ultimo:'Ayer 16:40'},
+  ],
+};
+
+let sesion = null;
+let scanAccion = '';
+
+// ── FECHA ───────────────────────────────────────────────
+document.getElementById('hoy-chip').textContent =
+  new Date().toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+
+// ── LOGIN ───────────────────────────────────────────────
+document.getElementById('lp').onkeydown = e => { if(e.key==='Enter') doLogin(); };
+
+function doLogin(){
+  const u = document.getElementById('lu').value.trim().toLowerCase();
+  const p = document.getElementById('lp').value;
+  const err = document.getElementById('login-err');
+
+  // Demo: checar en USERS local
+  // Producción: llamar API_URL?accion=login&login=u&password=p
+  if(USERS[u] && USERS[u].pass === p){
+    err.style.display='none';
+    sesion = {login:u, ...USERS[u]};
+    document.getElementById('login-screen').style.transition='opacity .35s';
+    document.getElementById('login-screen').style.opacity='0';
+    setTimeout(()=>document.getElementById('login-screen').style.display='none',350);
+    setupRol();
+    renderAll();
+  } else {
+    err.style.display='block';
+    document.getElementById('lp').value='';
+  }
+}
+
+function doLogout(){
+  sesion=null;
+  location.reload();
+}
+
+// ── ROLES ───────────────────────────────────────────────
+function setupRol(){
+  document.getElementById('sb-user').textContent = sesion.nombre;
+  document.getElementById('sb-rol-txt').textContent = sesion.rol;
+
+  if(sesion.rol === 'admin'){
+    document.getElementById('nav-admin').style.display='block';
+    document.getElementById('nav-planta').style.display='none';
+    document.getElementById('sb-role').textContent = 'Admin — acceso completo';
+    // go to dashboard
+    go('dashboard', document.querySelector('#nav-admin .nav'));
+  } else {
+    document.getElementById('nav-admin').style.display='none';
+    document.getElementById('nav-planta').style.display='block';
+    document.getElementById('sb-role').textContent = 'Planta — operaciones QR';
+    go('planta', document.querySelector('#nav-planta .nav'));
+  }
+}
+
+// ── NAVEGACIÓN ──────────────────────────────────────────
+const titles = {
+  dashboard:'Dashboard', barriles:'Barriles', clientes:'Clientes',
+  entregas:'Entregas', pedidos:'Pedidos', cuentas:'Cuentas corrientes',
+  estadisticas:'Estadísticas', usuarios:'Usuarios', estilos:'Estilos de cerveza',
+  migracion:'Migración de datos', planta:'Panel de operaciones'
+};
+function go(name, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
+  const p = document.getElementById('panel-'+name);
+  if(p) p.classList.add('on');
+  if(el) el.classList.add('on');
+  document.getElementById('pg-title').textContent = titles[name]||name;
+}
+
+// ── RENDER ALL ──────────────────────────────────────────
+function renderAll(){
+  renderDash(); renderBarriles(); renderClientes();
+  renderEntregas(); renderPedidos(); renderCuentas();
+  renderEst(); renderUsuarios(); renderEstilos();
+}
+
+// ── HELPERS ─────────────────────────────────────────────
+const chipE = e => ({
+  disponible:`<span class="ch ch-g">disponible</span>`,
+  envasado:  `<span class="ch ch-a">envasado</span>`,
+  entregado: `<span class="ch ch-b">entregado</span>`,
+  vacio:     `<span class="ch ch-x">vacío</span>`,
+  devuelto:  `<span class="ch ch-x">devuelto</span>`,
+  pendiente: `<span class="ch ch-a">pendiente</span>`,
+  preparando:`<span class="ch ch-b">preparando</span>`,
+  entregado2:`<span class="ch ch-g">entregado</span>`,
+  cancelado: `<span class="ch ch-r">cancelado</span>`,
+}[e]||`<span class="ch ch-x">${e}</span>`);
+
+const daysBadge = d => {
+  const c = d<=14?'d-ok':d<=25?'d-warn':'d-over';
+  return `<span class="days ${c}">⏱ ${d}d</span>`;
+};
+const saldoHtml = s => {
+  const abs = Math.abs(s).toLocaleString('es-AR');
+  return s>=0 ? `<span style="color:#50C080">$${abs}</span>`
+              : `<span style="color:#E06070">-$${abs}</span>`;
+};
+const ddiff = venc => {
+  if(venc==='—') return 999;
+  const [d,m,y]=venc.split('/');
+  return Math.ceil((new Date(+y,+m-1,+d)-new Date())/86400000);
+};
+
+// ── DASHBOARD ───────────────────────────────────────────
+function renderDash(){
+  const disp=D.barriles.filter(b=>b.estado==='disponible').length;
+  const env =D.barriles.filter(b=>b.estado==='envasado').length;
+  const ent =D.barriles.filter(b=>b.estado==='entregado').length;
+  document.getElementById('s1').textContent=disp;
+  document.getElementById('s2').textContent=env;
+  document.getElementById('s3').textContent=ent;
+  document.getElementById('s4').textContent=3;
+  // trends (demo)
+  document.getElementById('tr1').className='stat-trend trend-eq'; document.getElementById('tr1').textContent='= igual';
+  document.getElementById('tr2').className='stat-trend trend-up'; document.getElementById('tr2').textContent='▲ +2 vs ayer';
+  document.getElementById('tr3').className='stat-trend trend-up'; document.getElementById('tr3').textContent='▲ +1 esta sem.';
+
+  const activos=D.entregas.filter(e=>e.estado==='entregado');
+  document.getElementById('t-activos').innerHTML=activos.map(e=>
+    `<tr><td>${e.barril}</td><td style="font-weight:500">${e.cliente}</td>
+     <td><span class="ch ch-a" style="font-size:10px">${e.estilo}</span></td>
+     <td>${daysBadge(e.dias)}</td></tr>`
+  ).join('');
+
+  // bar chart producción
+  const meses=['Oct','Nov','Dic','Ene','Feb','Mar'];
+  const vals=[8,12,7,15,11,9];
+  const mx=Math.max(...vals);
+  document.getElementById('chart-prod').innerHTML=meses.map((m,i)=>
+    `<div class="bw">
+      <div class="bv">${vals[i]}</div>
+      <div class="b" style="height:${Math.round(vals[i]/mx*100)}%"></div>
+      <div class="bl">${m}</div>
+     </div>`
+  ).join('');
+}
+
+// ── BARRILES ────────────────────────────────────────────
+function renderBarriles(list){
+  list=list||D.barriles;
+  document.getElementById('t-barriles').innerHTML=list.map(b=>
+    `<tr>
+      <td><code style="color:var(--red3);font-size:11px;background:var(--red-bg);padding:2px 6px;border-radius:4px">${b.codigo}</code></td>
+      <td style="font-weight:500">${b.nombre}</td>
+      <td>${chipE(b.estado)}</td>
+      <td>${b.estilo!=='—'?`<span class="ch ch-a" style="font-size:10px">${b.estilo}</span>`:'<span style="color:var(--text3)">—</span>'}</td>
+      <td style="color:var(--text3);font-size:12px">${b.env}</td>
+      <td style="font-size:12px;color:${ddiff(b.venc)<7?'#E06070':'var(--text2)'}">${b.venc}</td>
+      <td><button class="btn btn-ghost btn-sm">Ver</button></td>
+    </tr>`
+  ).join('');
+}
+
+// ── CLIENTES ────────────────────────────────────────────
+function renderClientes(list){
+  list=list||D.clientes;
+  document.getElementById('t-clientes').innerHTML=list.map(c=>{
+    // Dias maximo en su poder (del barril más viejo activo)
+    const entActivas=D.entregas.filter(e=>e.estado==='entregado'&&e.cliente===c.nombre);
+    const maxDias=entActivas.length>0?Math.max(...entActivas.map(e=>e.dias)):null;
+    const diasHtml=maxDias!==null
+      ? (maxDias>25?`<span class="ch ch-p">⏱ ${maxDias}d</span>`
+        :maxDias>14?`<span class="ch ch-y">⏱ ${maxDias}d</span>`
+        :`<span class="ch ch-g">⏱ ${maxDias}d</span>`)
+      : '<span style="color:var(--text3)">—</span>';
+    return `<tr>
+      <td style="font-weight:500">${c.nombre}</td>
+      <td style="color:var(--text3)">${c.razon}</td>
+      <td>${c.tel}</td>
+      <td>${c.activos>0?`<span class="ch ch-t">${c.activos} barril${c.activos>1?'es':''}</span>`:'<span style="color:var(--text3)">0</span>'}</td>
+      <td>${diasHtml}</td>
+      <td>${saldoHtml(c.saldo)}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn btn-ghost btn-sm" onclick="abrirReporte(${c.id})">📄 Reporte</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── ENTREGAS ────────────────────────────────────────────
+function renderEntregas(list){
+  list=list||D.entregas;
+  document.getElementById('t-entregas').innerHTML=list.map(e=>
+    `<tr>
+      <td style="color:var(--text3);font-size:12px">${e.fecha}</td>
+      <td>${e.barril}</td>
+      <td><span class="ch ch-a" style="font-size:10px">${e.estilo}</span></td>
+      <td style="font-weight:500">${e.cliente}</td>
+      <td>${e.estado==='entregado'?daysBadge(e.dias):'—'}</td>
+      <td>${chipE(e.estado)}</td>
+    </tr>`
+  ).join('');
+}
+
+// ── PEDIDOS ─────────────────────────────────────────────
+function renderPedidos(){
+  document.getElementById('t-pedidos').innerHTML=D.pedidos.map(p=>
+    `<tr>
+      <td style="color:var(--text3)">#${p.id}</td>
+      <td style="color:var(--text3);font-size:12px">${p.fecha}</td>
+      <td style="font-weight:500">${p.cliente}</td>
+      <td>${p.items} item${p.items>1?'s':''}</td>
+      <td>${chipE(p.estado)}</td>
+      <td><button class="btn btn-ghost btn-sm">Ver</button></td>
+    </tr>`
+  ).join('');
+}
+
+// ── CUENTAS ─────────────────────────────────────────────
+function renderCuentas(){
+  document.getElementById('t-cuentas').innerHTML=D.clientes.map(c=>
+    `<tr>
+      <td style="font-weight:500">${c.nombre}</td>
+      <td>${c.activos>0?`<span class="ch ch-b">${c.activos}</span>`:'0'}</td>
+      <td style="color:var(--text3);font-size:12px">28/03/2026</td>
+      <td>${saldoHtml(c.saldo)}</td>
+      <td><button class="btn btn-ghost btn-sm">Detalle</button></td>
+    </tr>`
+  ).join('');
+}
+
+// ── ESTADÍSTICAS ─────────────────────────────────────────
+function renderEst(){
+  // Poblar el selector de cliente
+  const sel=document.getElementById('sel-cliente-est');
+  if(sel&&sel.options.length<=1){
+    D.clientes.forEach(c=>{
+      const opt=document.createElement('option');
+      opt.value=c.id; opt.textContent=c.nombre;
+      sel.appendChild(opt);
+    });
+  }
+
+  // Consumo por estilo — desde datos reales de entregas
+  const estilosCount={};
+  D.entregas.forEach(e=>{ estilosCount[e.estilo]=(estilosCount[e.estilo]||0)+1; });
+  const estilosArr=Object.entries(estilosCount).sort((a,b)=>b[1]-a[1]);
+  const totalEnt=D.entregas.length;
+  const estColors=['#FF671B','#FFB700','#A0D9B3','#005C5D','#A7B1DB'];
+  document.getElementById('est-estilos').innerHTML=estilosArr.slice(0,5).map(([nom,n],i)=>{
+    const pct=Math.round(n/totalEnt*100);
+    return `<div class="prog-row">
+      <span style="font-size:12px;min-width:80px">${nom}</span>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${estColors[i%estColors.length]}"></div></div>
+      <span style="font-size:11px;color:var(--text3);min-width:50px;text-align:right">${n} (${pct}%)</span>
+    </div>`;
+  }).join('');
+
+  // Top clientes — desde datos reales
+  const cliCount={};
+  D.entregas.forEach(e=>{ cliCount[e.cliente]=(cliCount[e.cliente]||0)+1; });
+  const cliArr=Object.entries(cliCount).sort((a,b)=>b[1]-a[1]);
+  const maxC=cliArr[0]?cliArr[0][1]:1;
+  document.getElementById('est-clientes').innerHTML=cliArr.slice(0,5).map(([nom,n])=>{
+    const pct=Math.round(n/maxC*100);
+    return `<div class="prog-row">
+      <span style="font-size:12px;min-width:140px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${nom}</span>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <span style="font-size:11px;color:var(--text3);min-width:28px;text-align:right">${n}</span>
+    </div>`;
+  }).join('');
+
+  // Tendencias por cliente (desde datos reales)
+  const hoy=new Date();
+  const getCount=(clienteNombre,mesKey)=>D.entregas.filter(e=>e.cliente===clienteNombre&&e.mes===mesKey).length;
+  const meses3=['2026-01','2026-02','2026-03'];
+  const mesesLbl=['Ene','Feb','Mar'];
+  const clientesPrincipales=cliArr.slice(0,4).map(([nom])=>nom);
+  document.getElementById('t-tendencias').innerHTML=clientesPrincipales.map(nom=>{
+    const vals=meses3.map(m=>getCount(nom,m));
+    const ult=vals[2], ant=vals[1];
+    const delta=ant>0?Math.round((ult-ant)/ant*100):0;
+    const up=delta>=0;
+    const mx=Math.max(...vals,1);
+    const spark=vals.map((v,i)=>{
+      const pct=Math.round(v/mx*100);
+      const col=i===vals.length-1?(up?'#A0D9B3':'#FAC3C6'):'var(--border2)';
+      return `<div class="sp" style="height:${Math.max(pct,5)}%;background:${col}"></div>`;
+    }).join('');
+    const dStr=delta>0?`▲ +${delta}%`:delta<0?`▼ ${delta}%`:'= igual';
+    const dCss=delta>0?'t-up':delta<0?'t-dn':'t-eq';
+    return `<tr>
+      <td style="font-weight:500;font-size:12px">${nom}</td>
+      ${vals.map(v=>`<td style="color:var(--text3)">${v}</td>`).join('')}
+      <td><div class="spark">${spark}</div></td>
+      <td><span class="trend ${dCss}" style="display:inline-block">${dStr}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Vencimientos
+  document.getElementById('t-venc').innerHTML=`
+    <tr><td style="font-weight:500">La Cervecería del Puerto</td><td>Barril 30L #01</td><td><span class="ch ch-o">IPA</span></td><td style="font-size:12px;color:#D4606A">12/04/2026</td><td><span class="days d-warn">14d</span></td></tr>
+    <tr><td style="font-weight:500">Bar Bohr</td><td>Barril 30L #03</td><td><span class="ch ch-o">Amber Ale</span></td><td style="font-size:12px;color:#D4606A">01/04/2026</td><td><span class="days d-over">3d</span></td></tr>
+    <tr><td style="font-weight:500">Jaque Mate</td><td>Barril 20L #03</td><td><span class="ch ch-o">Lager</span></td><td style="font-size:12px;color:var(--text2)">05/04/2026</td><td><span class="days d-warn">7d</span></td></tr>
+  `;
+
+  // Rotación por barril
+  const rotBarriles=[
+    {n:'30L #01',d:18},{n:'30L #02',d:22},{n:'20L #01',d:14},
+    {n:'30L #03',d:27},{n:'30L #04',d:16},{n:'20L #03',d:20},
+  ];
+  const mxR=Math.max(...rotBarriles.map(b=>b.d));
+  document.getElementById('chart-rotacion').innerHTML=rotBarriles.map(b=>`
+    <div class="bw">
+      <div class="bv">${b.d}d</div>
+      <div class="b" style="height:${Math.round(b.d/mxR*100)}%;background:${b.d>25?'#FFB700':'var(--orange)'}"></div>
+      <div class="bl">${b.n}</div>
+    </div>`
+  ).join('');
+}
+
+// ── ESTADÍSTICAS POR CLIENTE ────────────────────────────
+function renderEstCliente(idCliente){
+  const wrap=document.getElementById('est-cliente-wrap');
+  if(!idCliente){
+    wrap.innerHTML=`<div style="text-align:center;color:var(--text3);padding:28px;font-size:13px">Seleccioná un cliente para ver su historial de consumo mensual</div>`;
+    return;
+  }
+  const cli=D.clientes.find(c=>c.id==idCliente);
+  if(!cli) return;
+
+  const todas=D.entregas.filter(e=>e.cliente===cli.nombre);
+  const hoy=new Date();
+
+  // Últimos 8 meses
+  const meses8=[];
+  for(let i=7;i>=0;i--){
+    const d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const lbl=d.toLocaleDateString('es-AR',{month:'short',year:'2-digit'}).replace('. ','/'). replace('.','');
+    meses8.push({key,lbl,count:0});
+  }
+  todas.forEach(e=>{
+    const m=meses8.find(x=>x.key===e.mes);
+    if(m) m.count++;
+  });
+  const maxB=Math.max(...meses8.map(m=>m.count),1);
+
+  // Tendencia: últimos 3 vs anteriores 3
+  const ult3=meses8.slice(5).reduce((a,m)=>a+m.count,0);
+  const ant3=meses8.slice(2,5).reduce((a,m)=>a+m.count,0);
+  const delta=ant3>0?Math.round((ult3-ant3)/ant3*100):0;
+  const dCss=delta>0?'#3DB88A':delta<0?'#D4606A':'var(--text3)';
+  const dStr=delta>0?`▲ +${delta}% vs trimestre anterior`:delta<0?`▼ ${delta}% vs trimestre anterior`:'= Sin cambio vs trimestre anterior';
+
+  // Promedio mensual
+  const mesesConDatos=meses8.filter(m=>m.count>0);
+  const promedio=mesesConDatos.length>0?(todas.length/mesesConDatos.length).toFixed(1):0;
+
+  // Estilos del cliente
+  const estMap={};
+  todas.forEach(e=>{ estMap[e.estilo]=(estMap[e.estilo]||0)+1; });
+  const estArr=Object.entries(estMap).sort((a,b)=>b[1]-a[1]);
+  const estColors=['#FF671B','#FFB700','#A0D9B3','#005C5D','#A7B1DB'];
+
+  const bColors=meses8.map((_,i)=>estColors[i%estColors.length]);
+  const barsHtml=meses8.map((m,i)=>{
+    const pct=Math.round(m.count/maxB*100);
+    const color=m.count>0?estColors[i%5]:'var(--border)';
+    return `<div class="rep-bw">
+      <div class="rep-bv" style="color:${color}">${m.count>0?m.count:''}</div>
+      <div class="rep-b" style="height:${Math.max(pct,4)}%;background:${color}"></div>
+      <div class="rep-bl">${m.lbl}</div>
+    </div>`;
+  }).join('');
+
+  const estHtml=estArr.slice(0,4).map(([nom,n],i)=>{
+    const pct=Math.round(n/todas.length*100);
+    return `<div class="rep-estilo-row">
+      <span style="font-size:12px;min-width:90px">${nom}</span>
+      <div class="rep-estilo-bar"><div class="rep-estilo-fill" style="width:${Math.round(n/(estArr[0][1])*100)}%;background:${estColors[i]}"></div></div>
+      <span style="font-size:11px;color:var(--text3);min-width:70px;text-align:right">${n} barril${n>1?'es':''} · ${pct}%</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">
+      <div class="rep-sc"><div class="rep-sv">${todas.length}</div><div class="rep-sl">Total histórico</div></div>
+      <div class="rep-sc"><div class="rep-sv" style="color:var(--orange)">${promedio}</div><div class="rep-sl">Prom. mensual</div></div>
+      <div class="rep-sc"><div class="rep-sv" style="${delta>=0?'color:#3DB88A':'color:#D4606A'}">${ult3}</div><div class="rep-sl">Último trimestre</div></div>
+    </div>
+
+    <div style="margin-bottom:6px;font-size:12px;color:var(--text2);font-weight:600">Barriles entregados por mes</div>
+    <div class="rep-bars" style="height:80px;margin-bottom:6px">${barsHtml}</div>
+
+    <div style="padding:10px 14px;background:var(--bg3);border-radius:6px;margin-bottom:16px;font-size:12px">
+      <span style="font-weight:600;color:${dCss}">${dStr}</span>
+    </div>
+
+    <div style="margin-bottom:8px;font-size:12px;color:var(--text2);font-weight:600">Estilos consumidos</div>
+    ${estHtml||'<div style="color:var(--text3);font-size:13px">Sin datos</div>'}
+
+    <div style="margin-top:16px;display:flex;gap:8px">
+      <button class="btn btn-orange btn-sm" onclick="abrirReporte(${cli.id})">📄 Ver reporte completo</button>
+    </div>
+  `;
+}
+
+// ── USUARIOS ────────────────────────────────────────────
+function renderUsuarios(){
+  document.getElementById('t-usuarios').innerHTML=D.usuarios.map(u=>`
+    <tr>
+      <td style="font-weight:500">${u.nombre}</td>
+      <td style="color:var(--text3)">${u.login}</td>
+      <td><span class="ch ${u.rol==='admin'?'ch-r':'ch-g'}">${u.rol}</span></td>
+      <td><span class="ch ch-g">activo</span></td>
+      <td style="color:var(--text3);font-size:12px">${u.ultimo}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="toast('Editar usuario — próximamente','info')">Editar</button></td>
+    </tr>`
+  ).join('');
+}
+
+// ── ESTILOS ─────────────────────────────────────────────
+function renderEstilos(){
+  document.getElementById('t-estilos').innerHTML=D.estilos.map(e=>`
+    <tr>
+      <td style="font-weight:500">${e.nombre}</td>
+      <td style="color:var(--text3)">${e.desc}</td>
+      <td>${e.activos}</td>
+      <td style="color:var(--text3)">${e.total}</td>
+      <td><button class="btn btn-ghost btn-sm">Editar</button></td>
+    </tr>`
+  ).join('');
+}
+
+// ── FILTROS ─────────────────────────────────────────────
+function fil(tipo,val){
+  val=val.toLowerCase();
+  if(tipo==='barriles') renderBarriles(D.barriles.filter(b=>
+    b.nombre.toLowerCase().includes(val)||b.codigo.includes(val)));
+  else if(tipo==='clientes') renderClientes(D.clientes.filter(c=>
+    c.nombre.toLowerCase().includes(val)));
+  else if(tipo==='entregas') renderEntregas(D.entregas.filter(e=>
+    e.barril.toLowerCase().includes(val)||e.cliente.toLowerCase().includes(val)));
+}
+function filEstado(v){ renderBarriles(v?D.barriles.filter(b=>b.estado===v):D.barriles); }
+function filEntregas(v){ renderEntregas(v?D.entregas.filter(e=>e.estado===v):D.entregas); }
+
+// ── MODALES ─────────────────────────────────────────────
+function openM(id){ document.getElementById(id).classList.add('on'); }
+function closeM(id){ document.getElementById(id).classList.remove('on'); }
+document.querySelectorAll('.overlay').forEach(m=>
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); }));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.querySelectorAll('.overlay.on').forEach(m=>m.classList.remove('on'));
+});
+
+// ── CAPACIDAD SELECTOR ───────────────────────────────────
+let capSeleccionada = 50;
+function setCap(val, btn){
+  document.querySelectorAll('.cap-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const inp = document.getElementById('bk');
+  const disp = document.getElementById('bk-display');
+  if(val===null){
+    inp.style.display='block'; disp.style.display='none';
+    inp.value=''; inp.focus();
+    capSeleccionada=null;
+  } else {
+    inp.style.display='none'; disp.style.display='block';
+    disp.textContent = val + ' litros';
+    capSeleccionada=val;
+  }
+}
+
+// ── GUARDAR ─────────────────────────────────────────────
+function gBarril(){
+  const n=document.getElementById('bn').value.trim();
+  const c=document.getElementById('bc').value.trim();
+  const cap = capSeleccionada !== null ? capSeleccionada : parseInt(document.getElementById('bk').value)||50;
+  if(!n||!c){toast('Completá nombre y código','err');return;}
+  D.barriles.push({id:Date.now(),codigo:c,nombre:n,estado:'disponible',estilo:'—',env:'—',venc:'—',capacidad:cap});
+  renderBarriles(); closeM('m-barril');
+  document.getElementById('bn').value=''; document.getElementById('bc').value='';
+  // Reset capacity to 50
+  capSeleccionada=50;
+  document.querySelectorAll('.cap-btn').forEach((b,i)=>{b.classList.toggle('on',i===0)});
+  document.getElementById('bk-display').textContent='50 litros';
+  document.getElementById('bk').style.display='none';
+  document.getElementById('bk-display').style.display='block';
+  toast(`Barril ${cap}L agregado ✓`);
+}
+function gCliente(){
+  const n=document.getElementById('cn').value.trim();
+  if(!n){toast('El nombre es obligatorio','err');return;}
+  D.clientes.push({id:Date.now(),nombre:n,razon:document.getElementById('cr').value,
+    tel:document.getElementById('ct').value,activos:0,saldo:0});
+  renderClientes(); closeM('m-cliente');
+  document.getElementById('cn').value='';
+  toast('Cliente agregado ✓');
+}
+function gUsuario(){
+  const n=document.getElementById('un').value.trim();
+  const l=document.getElementById('ul').value.trim();
+  const p=document.getElementById('up').value;
+  if(!n||!l||!p){toast('Completá todos los campos','err');return;}
+  D.usuarios.push({id:Date.now(),
+    nombre:n+' '+document.getElementById('ua').value,
+    login:l, rol:document.getElementById('ur').value,
+    activo:true, ultimo:'Nunca'});
+  // En producción: POST a api_admin.php?accion=crear_usuario
+  renderUsuarios(); closeM('m-usuario');
+  toast('Usuario creado ✓ (conectar backend para persistir)');
+}
+function gEstilo(){
+  const n=document.getElementById('en').value.trim();
+  if(!n){toast('El nombre es obligatorio','err');return;}
+  D.estilos.push({id:Date.now(),nombre:n,desc:document.getElementById('ed').value,activos:0,total:0});
+  renderEstilos(); closeM('m-estilo');
+  toast('Estilo agregado ✓');
+}
+
+// ── PLANTA / SCAN ────────────────────────────────────────
+function showScan(accion){
+  scanAccion=accion;
+  const titles={
+    envasar:'Escanear barril — Envasar',
+    recibir:'Escanear barril — Recibir',
+    entregar:'Escanear barril — Entregar',
+    vaciar:'Escanear barril — Vaciar',
+  };
+  document.getElementById('scan-title').textContent=titles[accion]||accion;
+  document.getElementById('scan-area').style.display='block';
+  document.getElementById('scan-area').scrollIntoView({behavior:'smooth'});
+}
+function simScan(){
+  // Simula resultado del escáner QR
+  const codigoFalso='7790001002';
+  toast(`QR leído: ${codigoFalso} — Barril 30L #02 | Acción: ${scanAccion}`);
+  document.getElementById('scan-area').style.display='none';
+  // En producción: llamar a app.php?accion=scan_barril_${scanAccion}&codBarril=${codigo}
+}
+
+// ── REPORTE DE CLIENTE ───────────────────────────────────
+function abrirReporte(idCliente){
+  const cli=D.clientes.find(c=>c.id===idCliente);
+  if(!cli){toast('Cliente no encontrado','err');return;}
+
+  // Todas las entregas del cliente (históricas + activas)
+  const todas=D.entregas.filter(e=>e.cliente===cli.nombre);
+  const acts=todas.filter(e=>e.estado==='entregado');
+  const hist=todas; // todas incluyendo devueltas
+
+  const fechaHoy=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
+  const maxDias=acts.length>0?Math.max(...acts.map(e=>e.dias)):0;
+  const dc=d=>d>25?'color:#D4606A;font-weight:700':d>14?'color:#C89000;font-weight:700':'color:#3DB88A;font-weight:700';
+
+  // ── CONSUMO MENSUAL (últimos 6 meses) ─────────────────────
+  const hoy=new Date();
+  const meses6=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const lbl=d.toLocaleDateString('es-AR',{month:'short'}).replace('.','');
+    meses6.push({key,lbl,count:0});
+  }
+  hist.forEach(e=>{
+    const m=meses6.find(x=>x.key===e.mes);
+    if(m) m.count++;
+  });
+  const maxBars=Math.max(...meses6.map(m=>m.count),1);
+
+  // Tendencia: comparar últimos 3 meses vs 3 anteriores
+  const ult3=meses6.slice(3).reduce((a,m)=>a+m.count,0);
+  const ant3=meses6.slice(0,3).reduce((a,m)=>a+m.count,0);
+  const deltaNum=ant3>0?Math.round((ult3-ant3)/ant3*100):0;
+  const deltaStr=deltaNum>0?`▲ +${deltaNum}%`:deltaNum<0?`▼ ${deltaNum}%`:'= Sin cambio';
+  const deltaCss=deltaNum>0?'color:#3DB88A':deltaNum<0?'color:#D4606A':'color:var(--text3)';
+
+  // Colores paleta BOHR para las barras por mes
+  const barColors=['#FFB700','#FF671B','#A0D9B3','#005C5D','#A7B1DB','#FAC3C6'];
+  const barHtml=meses6.map((m,i)=>{
+    const pct=Math.round(m.count/maxBars*100);
+    const color=m.count>0?barColors[i%barColors.length]:'var(--border)';
+    const countLbl=m.count>0?m.count:'';
+    return `<div class="rep-bw">
+      <div class="rep-bv" style="color:${color}">${countLbl}</div>
+      <div class="rep-b" style="height:${Math.max(pct,4)}%;background:${color}"></div>
+      <div class="rep-bl">${m.lbl}</div>
+    </div>`;
+  }).join('');
+
+  // ── ESTILOS MÁS CONSUMIDOS ────────────────────────────────
+  const estilosMap={};
+  hist.forEach(e=>{
+    if(!estilosMap[e.estilo]) estilosMap[e.estilo]=0;
+    estilosMap[e.estilo]++;
+  });
+  const estilosOrden=Object.entries(estilosMap).sort((a,b)=>b[1]-a[1]);
+  const maxEst=estilosOrden[0]?estilosOrden[0][1]:1;
+  const estColors=['#FF671B','#FFB700','#A0D9B3','#005C5D','#A7B1DB'];
+  const estilosHtml=estilosOrden.slice(0,4).map(([nombre,cant],i)=>{
+    const pct=Math.round(cant/hist.length*100);
+    return `<div class="rep-estilo-row">
+      <span style="font-size:12px;min-width:90px">${nombre}</span>
+      <div class="rep-estilo-bar"><div class="rep-estilo-fill" style="width:${Math.round(cant/maxEst*100)}%;background:${estColors[i]}"></div></div>
+      <span style="font-size:11px;color:var(--text3);min-width:50px;text-align:right">${cant} barril${cant>1?'es':''} (${pct}%)</span>
+    </div>`;
+  }).join('');
+
+  // ── FILAS BARRILES ACTIVOS ────────────────────────────────
+  const filas=acts.length>0?acts.map(e=>`
+    <tr>
+      <td><strong>${e.barril}</strong></td>
+      <td><span style="background:rgba(255,103,27,.15);color:#FF8444;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${e.estilo}</span></td>
+      <td style="color:var(--text3);font-size:12px">${e.fecha}</td>
+      <td style="${dc(e.dias)}">${e.dias} días</td>
+    </tr>`).join('')
+    :`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Sin barriles activos en este momento</td></tr>`;
+
+  document.getElementById('rep-contenido').innerHTML=`
+    <div class="rep-head">
+      <div class="rep-brand"><span class="o">BOHR</span>riles</div>
+      <div class="rep-meta">Reporte de cliente<br>Emitido: ${fechaHoy}<br>BOHR Cerveza Artesanal</div>
+    </div>
+
+    <div class="rep-clibox">
+      <div class="rep-cliname">${cli.nombre}</div>
+      <div class="rep-clisub">${[cli.razon,cli.tel,cli.email].filter(Boolean).join(' · ')}</div>
+    </div>
+
+    <div class="rep-summary">
+      <div class="rep-sc"><div class="rep-sv">${acts.length}</div><div class="rep-sl">Barriles en su poder</div></div>
+      <div class="rep-sc"><div class="rep-sv" style="${dc(maxDias)}">${maxDias}</div><div class="rep-sl">Días máx sin devolver</div></div>
+      <div class="rep-sc"><div class="rep-sv">${hist.length}</div><div class="rep-sl">Total histórico</div></div>
+    </div>
+
+    ${acts.length>0?`<div class="rep-note">
+      Hay ${acts.length} barril${acts.length>1?'es':''} en su poder.
+      ${maxDias>21?'<strong>⚠ Superó los 21 días — solicitar devolución urgente.</strong>':'Se solicita devolución al superar los 21 días.'}
+    </div>`:''}
+
+    <table class="rep-table">
+      <thead><tr><th>Barril activo</th><th>Estilo</th><th>Fecha entrega</th><th>Días en su poder</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+
+    <div class="rep-chart-wrap">
+      <div class="rep-chart-title">
+        Consumo mensual — últimos 6 meses
+        <span>${hist.length} barriles en total</span>
+      </div>
+      <div class="rep-bars">${barHtml}</div>
+    </div>
+
+    <div class="rep-trend-row">
+      <div class="rep-trend-val" style="${deltaCss}">${ult3}</div>
+      <div class="rep-trend-info">
+        <div class="rep-trend-lbl">Barriles en los últimos 3 meses</div>
+        <div class="rep-trend-delta" style="${deltaCss}">
+          ${deltaStr} vs los 3 meses anteriores (${ant3} barriles)
+        </div>
+      </div>
+    </div>
+
+    <div class="rep-chart-wrap">
+      <div class="rep-chart-title">Estilos más consumidos</div>
+      ${estilosHtml||'<div style="color:var(--text3);font-size:13px">Sin datos</div>'}
+    </div>
+
+    <div class="rep-footer">
+      <strong>BOHR Cerveza Artesanal</strong> · contacto@bohr.com.ar · +54 223 000-0000<br>
+      Los barriles son propiedad de BOHR. Se solicita su devolución en buen estado.<br>
+      Saldo cuenta corriente: ${cli.saldo<0?'Debe':'A favor'} $${Math.abs(cli.saldo).toLocaleString('es-AR')}
+    </div>`;
+
+  openM('m-reporte');
+}
+
+function copiarReporte(){
+  const cli=document.querySelector('.rep-cliname');
+  const rows=document.querySelectorAll('.rep-table tbody tr');
+  if(!cli){toast('No hay reporte generado','err');return;}
+  let txt=`REPORTE DE BARRILES · BOHR Cerveza Artesanal\n`;
+  txt+=`Fecha: ${new Date().toLocaleDateString('es-AR')}\n`;
+  txt+=`${'─'.repeat(50)}\n`;
+  txt+=`Cliente: ${cli.textContent}\n\n`;
+  txt+=`BARRIL               ESTILO        ENTREGA     DÍAS\n`;
+  txt+=`${'─'.repeat(50)}\n`;
+  rows.forEach(r=>{
+    const c=r.querySelectorAll('td');
+    if(c.length>=4) txt+=`${(c[0].textContent.trim()).padEnd(20)} ${(c[1].textContent.trim()).padEnd(13)} ${(c[2].textContent.trim()).padEnd(11)} ${c[3].textContent.trim()}\n`;
+  });
+  txt+=`${'─'.repeat(50)}\nBOHR Cerveza Artesanal · Los barriles son propiedad de BOHR.\n`;
+  navigator.clipboard.writeText(txt)
+    .then(()=>toast('Copiado · pegalo en WhatsApp o email ✓'))
+    .catch(()=>toast('Usá el botón Imprimir','err'));
+}
+
+// ── TOAST ────────────────────────────────────────────────
+function toast(msg,tipo){
+  const t=document.getElementById('toast-el');
+  t.textContent=msg;
+  t.className='toast'+(tipo==='err'?' err':tipo==='info'?' err':'');
+  if(tipo==='info') t.style.background='var(--blue)';
+  else t.style.background='';
+  t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),3500);
+}
+</script>
+</body>
+</html>

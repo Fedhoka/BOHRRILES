@@ -1,0 +1,122 @@
+═══════════════════════════════════════════════════
+  BOHRriles · Sistema de gestión de barriles
+  Versión 1.1
+═══════════════════════════════════════════════════
+
+ESTRUCTURA DE ARCHIVOS
+────────────────────────────────────────────────────
+bohrriles/
+├── admin/
+│   ├── index.html      ← PANEL WEB (abrí esto en el navegador)
+│   └── logo.png
+├── backend/
+│   ├── app.php         ← API para la app móvil
+│   ├── api_admin.php   ← API para el panel web
+│   ├── config.php      ← ⚠ EDITÁ ESTE con tus datos de BD
+│   └── helpers.php
+├── database/
+│   └── schema.sql      ← Importar en phpMyAdmin (1 sola vez)
+├── app_movil/          ← Proyecto Solar2D (app para Android)
+│   ├── main.lua
+│   ├── config.lua
+│   ├── build.settings
+│   └── scenes/
+└── LEEME.txt           ← Este archivo
+
+═══════════════════════════════════════════════════
+  CÓMO PROBAR GRATIS EN TU PC (XAMPP)
+═══════════════════════════════════════════════════
+
+PASO 1 - Instalar XAMPP
+  → Descargá de: https://www.apachefriends.org/es/index.html
+  → Instalá con las opciones por defecto
+
+PASO 2 - Iniciar servicios
+  → Abrí el Panel de Control de XAMPP
+  → Presioná START en Apache y MySQL
+
+PASO 3 - Copiar archivos
+  → Copiá la carpeta backend/ a:
+    C:\xampp\htdocs\bohrriles\
+  → Resultado: C:\xampp\htdocs\bohrriles\app.php (etc)
+
+PASO 4 - Crear la base de datos
+  → Abrí Chrome y entrá a: http://localhost/phpmyadmin
+  → Clic en "Nueva" (panel izquierdo)
+  → Nombre: bohrriles → Clic en "Crear"
+  → Clic en la base "bohrriles" → pestaña "Importar"
+  → Seleccioná el archivo database/schema.sql
+  → Clic en "Continuar"
+
+PASO 5 - Configurar la conexión
+  → Abrí backend/config.php con el Bloc de Notas
+  → Cambiá:
+    DB_USER  →  'root'
+    DB_PASS  →  ''        (vacío, es el default de XAMPP)
+    DB_NAME  →  'bohrriles'
+
+PASO 6 - Probar el panel
+  → Abrí admin/index.html con doble click en Chrome
+  → Login: admin / admin  (demo)
+     o      planta / planta  (rol de producción)
+
+PASO 7 - Conectar panel al backend
+  → Abrí admin/index.html con el Bloc de Notas
+  → Buscá la línea: const API = '...'
+  → Cambiala a:
+    const API = 'http://localhost/bohrriles/app.php';
+
+═══════════════════════════════════════════════════
+  PRIMER USUARIO REAL (contraseña de producción)
+═══════════════════════════════════════════════════
+
+  El schema.sql crea un usuario inicial:
+  Login:      admin
+  Contraseña: password
+
+  ⚠ CAMBIALA INMEDIATAMENTE desde:
+    Panel → Usuarios → Editar → Nueva contraseña
+
+═══════════════════════════════════════════════════
+  SUBIR AL HOSTING (cuando estés listo)
+═══════════════════════════════════════════════════
+
+  1. Contratar Hostinger (~$3 USD/mes)
+  2. En cPanel → MySQL Databases → crear BD "bohrriles"
+  3. phpMyAdmin → importar schema.sql
+  4. Editar config.php con los datos del hosting
+  5. Subir carpeta backend/ a public_html/bohrriles/
+  6. Subir admin/index.html a public_html/admin/
+  7. Cambiar API_URL en index.html a tu dominio real
+
+═══════════════════════════════════════════════════
+  SOPORTE
+═══════════════════════════════════════════════════
+
+  Ante cualquier duda, consultá con Claude en:
+  https://claude.ai
+
+
+═══════════════════════════════════════════════════
+  NOVEDADES v1.2
+═══════════════════════════════════════════════════
+
+REPORTE DE BARRILES POR CLIENTE
+  · Desde Clientes → botón "📄 Reporte"
+  · Muestra todos los barriles en su poder con
+    estilo, fecha de entrega y días transcurridos
+  · Botón "📋 Copiar texto" → pegalo en WhatsApp
+  · Botón "🖨 Imprimir" → PDF o papel
+  · Alerta automática si supera 21 días
+
+COLUMNA DÍAS EN CLIENTES
+  · La tabla de clientes ahora muestra el máximo
+    de días que lleva el barril más antiguo
+  · Verde ≤14d · Amarillo 15-25d · Rojo >25d
+
+CAPACIDAD DE BARRIL — DEFAULT 50L
+  · Al crear un barril el valor por defecto es 50L
+  · Botones rápidos: 50 / 30 / 20 / 10 / Otro
+  · La base de datos también usa 50L por defecto
+  · API: endpoint get_reporte_cliente en app.php
+
