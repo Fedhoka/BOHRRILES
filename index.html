@@ -185,7 +185,7 @@ select.inp option{background:var(--bg3)}
 .btn-ghost:hover{border-color:var(--orange);color:var(--orange2)}
 .btn-sm{padding:5px 11px;font-size:11px;border-radius:6px}
 
-.content{padding:24px;flex:1;overflow-y:auto}
+.content{padding:24px;flex:1;overflow-y:auto;min-height:0}
 
 /* ── PANELS ─────────────────────────────────────────────── */
 .panel{display:none}
@@ -403,7 +403,98 @@ select.fsel:focus{outline:none;border-color:var(--orange)}
 @media(max-width:900px){
   .stats{grid-template-columns:1fr 1fr}
   .g2,.g3{grid-template-columns:1fr}
-  :root{--sidebar:200px}
+  :root{--sidebar:220px}
+}
+
+/* ── MOBILE (≤ 640px) ───────────────────────────────────────
+   Sidebar se convierte en drawer lateral deslizable.
+   Botón hamburguesa en el topbar lo abre/cierra.
+─────────────────────────────────────────────────────────── */
+@media(max-width:640px){
+
+  /* Body scroll habilitado */
+  html,body{overflow:auto;height:auto}
+  body{display:block}
+
+  /* Sidebar como drawer fuera de pantalla */
+  .sidebar{
+    position:fixed;top:0;left:0;
+    height:100%;z-index:150;
+    transform:translateX(-100%);
+    transition:transform .28s ease;
+    box-shadow:4px 0 24px rgba(0,0,0,.12);
+    width:260px!important;min-width:260px!important;
+  }
+  .sidebar.open{transform:translateX(0)}
+
+  /* Overlay oscuro cuando el sidebar está abierto */
+  .sb-overlay{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.45);z-index:140;
+  }
+  .sb-overlay.on{display:block}
+
+  /* Main ocupa todo el ancho */
+  .main{width:100%;min-width:0;height:auto;min-height:100vh}
+
+  /* Topbar pegado arriba */
+  .topbar{
+    position:sticky;top:0;z-index:100;
+    padding:12px 14px;
+  }
+  .topbar-title{font-size:19px}
+
+  /* Botón hamburguesa */
+  .btn-menu{
+    display:flex!important;
+    align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:8px;
+    background:var(--bg3);border:1px solid var(--border);
+    cursor:pointer;font-size:17px;flex-shrink:0;
+  }
+
+  /* Contenido con padding reducido */
+  .content{padding:14px 12px}
+
+  /* Stats 2x2 */
+  .stats{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .stat{padding:13px 13px}
+  .stat-val{font-size:30px}
+
+  /* Tablas con scroll horizontal */
+  .card{overflow-x:auto}
+  table{min-width:480px}
+
+  /* Grillas */
+  .g2,.g3{grid-template-columns:1fr;gap:10px}
+
+  /* Fecha chip oculta */
+  .date-chip{display:none}
+
+  /* Modales full width */
+  .modal{width:95vw!important;padding:22px 18px}
+  .frow{grid-template-columns:1fr}
+
+  /* Report modal */
+  .report-modal{width:95vw!important;max-height:90vh}
+  .rep-summary{grid-template-columns:1fr 1fr 1fr}
+  .rep-bars{height:60px}
+
+  /* Action grid planta */
+  .action-grid{grid-template-columns:1fr 1fr;gap:10px;max-width:100%}
+  .action-card{padding:20px 14px}
+
+  /* Login */
+  .login-wrap{width:92vw;padding:30px 22px}
+
+  /* Filtros */
+  .filters{flex-direction:column;align-items:stretch}
+  .search,.fsel{width:100%}
+}
+
+/* Stats 1 columna en pantallas muy chicas */
+@media(max-width:380px){
+  .stats{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -485,9 +576,13 @@ select.fsel:focus{outline:none;border-color:var(--orange)}
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   MAIN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="sb-overlay" id="sb-overlay" onclick="toggleSidebar()"></div>
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title" id="pg-title">Dashboard</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="btn-menu" id="btn-menu" style="display:none" onclick="toggleSidebar()">☰</div>
+      <div class="topbar-title" id="pg-title">Dashboard</div>
+    </div>
     <div class="topbar-r">
       <div class="chip-date" id="hoy-chip"></div>
     </div>
@@ -906,18 +1001,39 @@ select.fsel:focus{outline:none;border-color:var(--orange)}
   </div>
 </div>
 
+<!-- Modal selector de tipo de reporte -->
+<div class="overlay" id="m-elegir-reporte">
+  <div class="modal" style="width:380px">
+    <button class="mc" onclick="closeM('m-elegir-reporte')">✕</button>
+    <h2>¿Qué reporte querés?</h2>
+    <div id="elegir-cli-nombre" style="font-size:13px;color:var(--text2);margin-bottom:20px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-orange" style="padding:14px;justify-content:flex-start;gap:12px;font-size:13px" onclick="elegirTipo('completo')">
+        <span style="font-size:20px">📋</span>
+        <div style="text-align:left">
+          <div style="font-weight:700">Reporte completo</div>
+          <div style="font-size:11px;opacity:.8;font-weight:400">Barriles activos + consumo mensual + estilos + saldo</div>
+        </div>
+      </button>
+      <button class="btn btn-ghost" style="padding:14px;justify-content:flex-start;gap:12px;font-size:13px;border:1px solid var(--border)" onclick="elegirTipo('simple')">
+        <span style="font-size:20px">📄</span>
+        <div style="text-align:left">
+          <div style="font-weight:700">Reporte simplificado</div>
+          <div style="font-size:11px;opacity:.7;font-weight:400">Solo barriles en su poder: estilo y días</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Reporte de Cliente -->
 <div class="overlay" id="m-reporte">
   <div class="modal report-modal">
     <button class="mc" onclick="closeM('m-reporte')">✕</button>
-
-    <div id="rep-contenido">
-      <!-- Se genera dinámicamente -->
-    </div>
-
+    <div id="rep-contenido"></div>
     <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:8px">
       <button class="btn btn-ghost" onclick="closeM('m-reporte')">Cerrar</button>
-      <button class="btn btn-ghost" onclick="copiarReporte()" id="btn-copiar">📋 Copiar texto</button>
+      <button class="btn btn-ghost" onclick="copiarReporte()" id="btn-copiar">📋 Copiar</button>
       <button class="btn btn-orange" onclick="window.print()">🖨 Imprimir</button>
     </div>
   </div>
@@ -1058,6 +1174,27 @@ let D = {
 let sesion = null;
 let scanAccion = '';
 
+// ── MOBILE ───────────────────────────────────────────────
+const isMobile = () => window.innerWidth <= 640;
+
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('on');
+}
+
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('on');
+}
+
+// Mostrar/ocultar botón hamburguesa según tamaño
+function checkMobile(){
+  const btn = document.getElementById('btn-menu');
+  if(btn) btn.style.display = isMobile() ? 'flex' : 'none';
+}
+window.addEventListener('resize', checkMobile);
+checkMobile();
+
 // ── FECHA ───────────────────────────────────────────────
 document.getElementById('hoy-chip').textContent =
   new Date().toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
@@ -1124,6 +1261,11 @@ function go(name, el){
   if(p) p.classList.add('on');
   if(el) el.classList.add('on');
   document.getElementById('pg-title').textContent = titles[name]||name;
+  // En móvil: cerrar sidebar y volver al tope
+  if(isMobile()){
+    closeSidebar();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 }
 
 // ── RENDER ALL ──────────────────────────────────────────
@@ -1231,7 +1373,7 @@ function renderClientes(list){
       <td>${diasHtml}</td>
       <td>${saldoHtml(c.saldo)}</td>
       <td style="display:flex;gap:5px">
-        <button class="btn btn-ghost btn-sm" onclick="abrirReporte(${c.id})">📄 Reporte</button>
+        <button class="btn btn-ghost btn-sm" onclick="elegirReporte(${c.id})">📄 Reporte</button>
       </td>
     </tr>`;
   }).join('');
@@ -1451,7 +1593,7 @@ function renderEstCliente(idCliente){
     ${estHtml||'<div style="color:var(--text3);font-size:13px">Sin datos</div>'}
 
     <div style="margin-top:16px;display:flex;gap:8px">
-      <button class="btn btn-orange btn-sm" onclick="abrirReporte(${cli.id})">📄 Ver reporte completo</button>
+      <button class="btn btn-orange btn-sm" onclick="elegirReporte(${cli.id})">📄 Ver reporte</button>
     </div>
   `;
 }
@@ -1591,7 +1733,64 @@ function simScan(){
   // En producción: llamar a app.php?accion=scan_barril_${scanAccion}&codBarril=${codigo}
 }
 
-// ── REPORTE DE CLIENTE ───────────────────────────────────
+// ── SELECTOR DE TIPO DE REPORTE ─────────────────────────
+let _repClienteId = null;
+function elegirReporte(idCliente){
+  _repClienteId = idCliente;
+  const cli = D.clientes.find(c=>c.id===idCliente);
+  document.getElementById('elegir-cli-nombre').textContent = cli ? cli.nombre : '';
+  openM('m-elegir-reporte');
+}
+function elegirTipo(tipo){
+  closeM('m-elegir-reporte');
+  if(tipo==='completo') abrirReporte(_repClienteId);
+  else abrirReporteSimple(_repClienteId);
+}
+
+// ── REPORTE SIMPLIFICADO ─────────────────────────────────
+function abrirReporteSimple(idCliente){
+  const cli=D.clientes.find(c=>c.id===idCliente);
+  if(!cli){toast('Cliente no encontrado','err');return;}
+  const acts=D.entregas.filter(e=>e.estado==='entregado'&&e.cliente===cli.nombre);
+  const fechaHoy=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
+  const dc=d=>d>25?'color:#CC3010;font-weight:700':d>14?'color:#996600;font-weight:700':'color:#1A7A45;font-weight:700';
+
+  const filas=acts.length>0?acts.map(e=>`
+    <tr>
+      <td style="font-weight:600">${e.estilo}</td>
+      <td style="${dc(e.dias)};font-size:18px;font-family:'Barlow Condensed',sans-serif">${e.dias} días</td>
+    </tr>`).join('')
+    :`<tr><td colspan="2" style="text-align:center;color:var(--text3);padding:20px">Sin barriles activos</td></tr>`;
+
+  const alertaHtml=acts.length>0&&Math.max(...acts.map(e=>e.dias))>21
+    ?`<div style="background:#FFF0EB;border:1px solid #FFCBB0;border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#CC4400">
+        ⚠ Hay barriles con más de 21 días. Se solicita devolución urgente.
+      </div>`:'';
+
+  document.getElementById('rep-contenido').innerHTML=`
+    <div class="rep-head">
+      <div class="rep-brand"><span class="o">BOHR</span>riles</div>
+      <div class="rep-meta">Resumen de barriles<br>${fechaHoy}</div>
+    </div>
+    <div class="rep-clibox">
+      <div class="rep-cliname">${cli.nombre}</div>
+      <div class="rep-clisub">${[cli.tel,cli.email].filter(Boolean).join(' · ')}</div>
+    </div>
+    ${alertaHtml}
+    <table class="rep-table">
+      <thead><tr><th>Estilo</th><th>Días en tu poder</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    ${acts.length===0?'':`<div style="padding:10px 14px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--text2)">
+      Total: <strong>${acts.length} barril${acts.length>1?'es':''}</strong> en tu poder · Por favor devolverlos al vencer o superar 21 días.
+    </div>`}
+    <div class="rep-footer" style="margin-top:14px">
+      BOHR Cerveza Artesanal · Los barriles son propiedad de BOHR.
+    </div>`;
+  openM('m-reporte');
+}
+
+// ── REPORTE COMPLETO DE CLIENTE ───────────────────────────
 function abrirReporte(idCliente){
   const cli=D.clientes.find(c=>c.id===idCliente);
   if(!cli){toast('Cliente no encontrado','err');return;}
