@@ -1,5 +1,4 @@
 {
-  "nodeVersion": "20.x",
   "buildCommand": "pnpm --filter @bohr/core build && pnpm --filter @bohr/web build",
   "outputDirectory": "apps/web/dist",
   "installCommand": "pnpm install",
