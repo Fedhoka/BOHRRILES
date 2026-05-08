@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth.js";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? "/api",
+  // In production on Vercel, /api/* is routed to the serverless function
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });

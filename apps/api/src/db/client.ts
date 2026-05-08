@@ -1,18 +1,11 @@
 import "dotenv/config";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { mkdirSync } from "node:fs";
-import { dirname } from "node:path";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema.js";
 
-const url = process.env.DATABASE_URL ?? "file:./data/bohr.db";
-const sqlitePath = url.replace(/^file:/, "");
+const url = process.env.DATABASE_URL;
+if (!url) throw new Error("DATABASE_URL is required");
 
-mkdirSync(dirname(sqlitePath), { recursive: true });
-
-const sqlite = new Database(sqlitePath);
-sqlite.pragma("journal_mode = WAL");
-sqlite.pragma("foreign_keys = ON");
-
-export const db = drizzle(sqlite, { schema });
+const sql = neon(url);
+export const db = drizzle(sql, { schema });
 export { schema };

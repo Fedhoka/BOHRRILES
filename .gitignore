@@ -42,3 +42,5 @@ Thumbs.db
 .gradle/
 app/build/
 local.properties
+
+.vercel
