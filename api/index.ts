@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -25,6 +24,7 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
+app.use((req, _res, next) => { req.url = req.url.replace(/^\/api/, "") || "/"; next(); });
 app.use(helmet());
 app.use(cors({
   origin: env.CORS_ORIGIN.split(",").map((s) => s.trim()),
