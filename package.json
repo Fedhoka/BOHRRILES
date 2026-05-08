@@ -1,0 +1,24 @@
+{
+  "name": "bohrriles",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Argentine tax + payroll system (VAT, payroll, annual reports)",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "db:push": "pnpm --filter @bohr/api run db:push",
+    "db:seed": "pnpm --filter @bohr/api run db:seed"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "prettier": "^3.3.3"
+  },
+  "packageManager": "pnpm@9.7.0"
+}

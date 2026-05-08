@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/cream_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_estilos"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="BOHRriles" android:textColor="@color/white" android:textSize="22sp" android:textStyle="bold"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="🍻 Estilos de Cerveza" android:textColor="#DDBFF0" android:textSize="14sp"/>
+    </LinearLayout>
+
+    <!-- Add form -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Agregar estilo" android:textSize="15sp" android:textStyle="bold"
+            android:textColor="@color/text_dark" android:layout_marginBottom="12dp"/>
+
+        <EditText android:id="@+id/etNombre"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@drawable/bg_input" android:hint="Nombre del estilo (ej: IPA)"
+            android:paddingHorizontal="12dp" android:inputType="text" android:textSize="14sp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText android:id="@+id/etDescripcion"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@drawable/bg_input" android:hint="Descripción (opcional)"
+            android:paddingHorizontal="12dp" android:inputType="text" android:textSize="14sp"
+            android:layout_marginBottom="12dp"/>
+
+        <Button android:id="@+id/btnAgregar"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@drawable/bg_rounded_purple"
+            android:text="+ Agregar" android:textColor="@color/white" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:background="@color/divider" android:layout_marginHorizontal="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEstilos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:clipToPadding="false"/>
+
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone"/>
+</LinearLayout>

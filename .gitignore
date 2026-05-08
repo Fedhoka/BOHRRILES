@@ -1,0 +1,41 @@
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+.cache/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# data
+data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# tests
+.vitest-cache/
+
+# claude cli
+.claude/
+
+# gradle / android build artifacts
+.gradle/
+app/build/
+local.properties
