@@ -34,7 +34,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const inp = "border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 w-full";
-const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
+const Field = ({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) => (
   <div>
     <label className="block text-xs font-medium text-slate-600 mb-1">{label}</label>
     {children}

@@ -46,7 +46,7 @@ interface Props {
   onCancel: () => void;
 }
 
-const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
+const Field = ({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) => (
   <div>
     <label className="block text-xs font-medium text-slate-600 mb-1">{label}</label>
     {children}

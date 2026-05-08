@@ -32,6 +32,9 @@ Thumbs.db
 # tests
 .vitest-cache/
 
+# typescript build info
+*.tsbuildinfo
+
 # claude cli
 .claude/
 

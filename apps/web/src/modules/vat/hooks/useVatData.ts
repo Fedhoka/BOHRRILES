@@ -21,7 +21,11 @@ export interface VatPreview {
     creditVatAfterProportionality: number; technicalBalanceCurrent: number;
     technicalBalanceNext: number; withholdingsApplied: number; perceptionsApplied: number;
     freeBalanceNext: number; payable: number;
-    detail: { debit: Record<string,number>; credit: Record<string,number>; rejectedCredit: {reason:string;amount:number}[] };
+    detail: {
+      debit: { vat21: number; vat105: number; vat27: number };
+      credit: { vat21: number; vat105: number; vat27: number };
+      rejectedCredit: { reason: string; amount: number }[];
+    };
   };
   counts: { sales: number; purchases: number; withholdings: number; perceptions: number };
   previous: { period: string; technicalBalanceNext: number; freeBalanceNext: number } | null;

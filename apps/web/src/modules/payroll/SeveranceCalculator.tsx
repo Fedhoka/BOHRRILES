@@ -28,7 +28,7 @@ const CAUSE_LABELS: Record<string, string> = {
 };
 
 const inp = "w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500";
-const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
+const Field = ({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) => (
   <div>
     <label className="block text-xs font-medium text-slate-600 mb-1">{label}</label>
     {children}
