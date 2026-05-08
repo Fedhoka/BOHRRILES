@@ -1,7 +1,7 @@
 {
   "buildCommand": "pnpm --filter @bohr/core build && pnpm --filter @bohr/web build",
   "outputDirectory": "apps/web/dist",
-  "installCommand": "pnpm install --frozen-lockfile",
+  "installCommand": "pnpm install",
   "framework": null,
   "functions": {
     "api/index.ts": {
