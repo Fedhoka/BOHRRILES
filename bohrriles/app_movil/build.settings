@@ -1,0 +1,40 @@
+-- ============================================================
+-- CERVESIA - build.settings
+-- Configuración de compilación para Corona SDK
+-- ============================================================
+
+settings = {
+    orientation = {
+        default   = "portrait",
+        supported = { "portrait" },
+    },
+
+    android = {
+        applicationChildElements = {
+            [[<uses-permission android:name="android.permission.CAMERA"/>]],
+            [[<uses-permission android:name="android.permission.INTERNET"/>]],
+            [[<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>]],
+            [[<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>]],
+        },
+        usesPermissions = {
+            "android.permission.CAMERA",
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_NETWORK_STATE",
+            "android.permission.ACCESS_FINE_LOCATION",
+        },
+    },
+
+    iphone = {
+        plist = {
+            NSCameraUsageDescription        = "Cervesia necesita la cámara para escanear códigos.",
+            NSLocationWhenInUseUsageDescription = "Para mostrar tu ubicación en el mapa.",
+            CFBundleDisplayName             = "Cervesia",
+            CFBundleVersion                 = "1.1.0",
+            CFBundleShortVersionString      = "1.1",
+        },
+    },
+
+    plugins = {
+        ["plugin.qrscanner"] = { publisherId = "com.lotech" },
+    },
+}
