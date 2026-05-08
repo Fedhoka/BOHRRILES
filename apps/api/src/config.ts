@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { z } from "zod";
 
 const Schema = z.object({
